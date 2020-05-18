@@ -1,0 +1,52 @@
+/* pages/register/register.wxss */
+.view1{
+  padding:5%;
+  height: 8%;
+}
+.view11{
+  background-color: #d9d9d9;
+  padding:0 3%;
+  height:100%;
+}
+.input1{
+  height:100%;
+}
+.view2{
+  padding:0 5% 5% 5%;
+  height:8%
+}
+.view21{
+  float: left;
+  background-color: #d9d9d9;
+  width:50%;
+  height:100%;
+  padding:0 3%;
+}
+.view22{
+  float:right;
+  width:37%;
+  height:100%;
+}
+.input2{
+  height:100%;
+}
+.button2 {
+  height:100%;
+  line-height: 250%;
+  padding:0;
+}
+.view3{
+  margin:0 8%;
+}
+.view4{
+  height:60%;
+  margin:30% 15% 0 15%;
+}
+.navigator3{
+  display:initial;
+  color: blue;
+  vertical-align:middle;
+}
+checkbox-group{
+  float: left;
+}

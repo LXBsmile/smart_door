@@ -1,0 +1,13 @@
+.section{
+  width:fit-content;
+  min-width: 12%;
+  display:inline-block;
+}
+.timepicker{
+  margin:5% 0%;
+  height: 1.5rem;
+  align-items:center;
+}
+.slot{
+  display: inline-block;
+}

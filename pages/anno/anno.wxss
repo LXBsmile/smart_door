@@ -1,0 +1,87 @@
+/* pages/anno/anno.wxss */
+.head{
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px #ebebeb;
+  background-color: white;
+}
+.img_court{
+  width:2.5rem;
+  margin-left: 5%;
+}
+.court11{
+  padding-left: 3%;
+  font-size: 1.3rem;
+  width:70%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.court12{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 3%;
+  width:5rem;
+  height: 2rem;
+  background-color: #ffbc16;
+  color: white;
+  border-top-left-radius:1rem; 
+  border-bottom-left-radius: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.body{
+  padding-left: 8%;
+  height:92%;
+  overflow-y: auto;
+  background-color: white;
+}
+.list{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 3.3rem;
+  border-bottom: solid 1px #ebebeb;
+}
+.list:visited{
+  background-color:red;
+}
+.item{
+  display: block;
+  width:90%;
+}
+.title{
+  float: left;
+  max-width:80%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.titlefalse{
+  float: left;
+  max-width:80%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.titletrue{
+  max-width:80%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#757575;
+}
+.time{
+ color: #757575;
+}
+.image_new{
+  width:2rem;
+  margin-left: 0.5rem;
+}
+.img_right{
+  width:0.8rem;
+  margin-right: 3%;
+}

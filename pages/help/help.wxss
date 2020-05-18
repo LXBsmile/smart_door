@@ -1,0 +1,80 @@
+/* pages/help/help.wxss */
+.contain{
+  background-color: #efefef;
+  height:90%;
+}
+.white{
+  height:2%;
+  background-color: #efefef;
+}
+.yellow{
+  height:0.2rem;
+  background-color: #febb17;
+}
+.head{
+  height: 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px #ebebeb;
+  background-color: white;
+}
+.img_court{
+  height:2.2rem;
+}
+.court11{
+  padding-left: 3%;
+  font-size: 1.3rem;
+  width:70%;
+}
+.court12{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 3%;
+  width:5rem;
+  height: 2rem;
+  background-color: #ffbc16;
+  color: white;
+  border-top-left-radius:1rem; 
+  border-bottom-left-radius: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.body{
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height:95%;
+}
+.body1{
+  padding-left:5%;
+  background-color: white;
+}
+.view1{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-bottom: solid 1px #ebebeb;
+  height: 3.3rem;
+}
+.view11{
+  font-size: 1rem;
+}
+.view12{
+  font-size: 0.8rem;
+  color: #6c6c6c;
+}
+.view2{
+  margin-top:3%;
+  background-color: white;
+  padding:3% 5%;
+}
+.view21{
+  font-size: 1rem;
+}
+.view22{
+  font-size: 0.8rem;
+  color: #6c6c6c;
+
+}

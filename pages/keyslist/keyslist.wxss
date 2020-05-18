@@ -1,0 +1,66 @@
+/* pages/keyslist/keyslist.wxss */
+.img_bg{
+  position: fixed;
+  z-index: -1;
+  width:100%;
+  height: 100%;
+}
+.yellow{
+  height:0.2rem;
+  background-color: #febb17;
+  margin-top: 4.3%;
+  margin-right: 4%;
+  margin-left:4%;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+.head{
+  margin-right: 4%;
+  margin-left:4%;
+  height:3rem;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: solid 1px #ebebeb;
+}
+.court12{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 4%;
+  width:5rem;
+  height: 2rem;
+  background-color: #ffbc16;
+  color: white;
+  border-top-left-radius:1rem; 
+  border-bottom-left-radius: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.court12:active{
+  background-color: #b2830f
+}
+.view_keylist{
+  overflow-y:auto;
+  height:84%;
+}
+.view_content{
+  display: flex;
+  height: 2.5rem;
+  justify-content: space-between;
+  align-items: center;
+  margin:0 4%;
+  padding: 1rem 4%;
+  border-bottom: solid 1px #e9e9e9;
+}
+.view_name{
+  color:#7c7c7c;
+}
+.img_lock{
+  width:15%;
+  height:100%;
+}
+.img_lock:active{
+  background-color: #e9e9e9;
+}

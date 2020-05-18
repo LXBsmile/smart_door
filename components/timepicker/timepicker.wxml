@@ -1,0 +1,29 @@
+<view class="timepicker">
+  <view>有效日期</view>
+  <view class="section">
+    <picker mode="date" fields='year' value="{{inputYear}}" start="{{startYear}}" end="{{endYear}}" bindchange="bindYearChange" disabled='{{dateDis}}'>
+      <view class="picker">{{inputYear}} 年</view>
+    </picker>
+  </view>
+  <view class="section">
+    <picker value="{{monthIndex}}" bindchange="bindMonthChange" range='{{monthArray}}' disabled='{{dateDis}}'>
+      <view class="picker">{{monthArray[monthIndex]}} 月</view>
+    </picker>
+  </view>
+  <view class="section">
+    <picker value="{{dayIndex}}" bindchange="bindDayChange" range='{{dayArray}}' disabled='{{dateDis}}'>
+      <view class="picker">{{dayArray[dayIndex]}} 日</view>
+    </picker>
+  </view>
+  <text decode='nbsp'>&nbsp;&nbsp;&nbsp;</text>
+  <view class="section">
+    <picker bindchange="bindTimeChange" value="{{timeIndex}}" range="{{timeArray}}" disabled='{{dateDis}}'>
+      <view class="picker">{{timeArray[timeIndex]}} 时</view>
+    </picker>
+  </view>
+    <view class="section">
+    <picker bindchange="bindMinChange" value="{{minIndex}}" range="{{minArray}}" disabled='{{dateDis}}'>
+      <view class="picker">{{minArray[minIndex]}} 分</view>
+    </picker>
+  </view>
+</view>

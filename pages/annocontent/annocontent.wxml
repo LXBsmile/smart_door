@@ -1,0 +1,6 @@
+<view class='container'>
+  <view class='head'>
+    <view class='head1'>{{f_noticeName}}</view><view class='head2'></view>
+  </view>
+  <rich-text class='body' nodes='{{f_noticeMsg}}'></rich-text>
+</view>

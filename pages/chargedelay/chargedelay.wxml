@@ -1,0 +1,17 @@
+<view class='container'>
+  <view class='head'>{{thisCourtName}}</view>
+  <view class='body'>
+    <view class='view1'>输入延期月数</view>
+    <view class='view2'>
+      <input type='number' maxlength='2' bindinput='inputMonth' value='{{month}}'/><text>月（1-60）</text>
+    </view>
+    <view class='view3'>
+      <view class='view31 {{now1}}' bindtap='set1'>1个月</view>
+      <view class='view32 {{now2}}' bindtap='set2'>2个月</view>
+      <view class='view33 {{now3}}' bindtap='set6'>6个月</view>
+    </view>
+    <view class='view4'><text class='view41'>应缴金额：</text><text class='view42'>{{total}}元</text><text class='view43'>（一个月的费用×月数）</text></view>
+    <view class='view5'><text class='view43'>本次缴费将收取手续费</text><text class='view42'>{{bee}}元</text></view>
+    <button type='primary' disabled='{{disabled}}' bindtap='chargeDelay'>确认延期</button>
+  </view>
+</view>

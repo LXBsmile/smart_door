@@ -1,0 +1,29 @@
+/* pages/annocontent/annocontent.wxss */
+.container{
+  background-color: #efefef;
+}
+.head{
+  background-color: white;
+  margin:4% 4% 0 4%;
+  border-top-left-radius: 0.4rem;
+  border-top-right-radius: 0.4rem;
+  height:2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding:2% 3%;
+  border-bottom:solid 1px #e5e5e5;
+}
+.head1{
+  font-size: 1.3rem;
+}
+.head2{
+  font-size:0.8rem;
+}
+.body{
+  background-color: white;
+  margin-left: 4%;
+  margin-right: 4%;
+  padding:4%;
+  overflow-y: auto;
+}

@@ -1,0 +1,139 @@
+/* pages/paycenter/paycenter.wxss */
+.container{
+  background-color: #efefef;
+}
+.yellow{
+  height:0.2rem;
+  background-color: #febb17;
+  margin-top:2%;
+}
+.head{
+  height: fit-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: top;
+  border-bottom: solid 1px #ebebeb;
+  background-color: white;
+  padding-top:3%;
+}
+.img_court{
+  height:2.2rem;
+}
+.court11{
+  padding-left: 3%;
+  font-size: 1.3rem;
+  width:70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.court12{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 3%;
+  width:5rem;
+  height: 2rem;
+  background-color: #ffbc16;
+  color: white;
+  border-top-left-radius:1rem; 
+  border-bottom-left-radius: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+.view112{
+  font-size:0.9rem;
+  color: #ababab;
+}
+.body{
+  background-color: white;
+  height: 40%;
+}
+.body1{
+  display: flex;
+  justify-content: space-between;
+  height:25%;
+  align-items: center;
+  padding:0 4%;
+  border-bottom: solid 1px #e5e5e5;
+}
+.b1{
+  display: flex;
+  align-items: center;
+  color: #a0a0a0;
+}
+.b11{
+  margin-left: 0.5rem;
+}
+.b1 image{
+  width:1rem;
+  height:1rem;
+}
+.c21{
+  width:100%;
+}
+.c211,.c221,.c231{
+  color: #a5a5a5;
+}
+.c231{
+  display: block;
+  float: left;
+}
+.c232{
+  display: block;
+  float: left;
+  width:75%;
+}
+.view_rest{
+  margin-top:1px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height:8%;
+  padding: 0 3%;
+}
+.view_charge{
+ margin-top:1px;
+ width: 100%;
+ background-color: white;
+}
+.c31{
+  background-color: #339add;
+  color: white;
+  padding:2%;
+  width:40%;
+  height:50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.c32{
+  background-color: #f4715d;
+  color: white;
+  padding:2%;
+  width:40%;
+  height:50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.view_courts:active{
+  background-color:#a9a7a7;
+}
+.c31:active{
+  background-color: #527d98;
+}
+.c32:active{
+  background-color: #9a6159;
+}
+.foot{
+  display: flex;
+  margin:5% 5%;
+  justify-content: space-between;
+  align-items: center;
+  height:8%;
+}
+.court111{
+  font-size: 1.15rem;
+}

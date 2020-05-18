@@ -1,0 +1,2 @@
+<!--pages/reg2/reg2.wxml-->
+<web-view src="https://www.szcjwzn.cn/getopenid.html?id={{id}}"></web-view>

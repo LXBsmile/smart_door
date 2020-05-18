@@ -1,0 +1,34 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/my/my",
+    "pages/register/register",
+    "pages/scan/scan",
+    "pages/keyslist/keyslist",
+    "pages/sharekeys/sharekeys",
+    "pages/paycenter/paycenter",
+    "pages/anno/anno",
+    "pages/annocontent/annocontent",
+    "pages/help/help",
+    "pages/protocol/protocol",
+    "pages/chargedelay/chargedelay",
+    "pages/charge/charge",
+    "pages/showqr/showqr",
+    "pages/reg2/reg2",
+    "pages/shareqr/shareqr"
+  ],
+  "window": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "智慧云门禁",
+    "navigationBarBackgroundColor": "#339adc",
+    "backgroundColor": "#F8F8F8"
+  },
+  "networkTimeout": {
+    "request": 10000,
+    "connectSocket": 30000,
+    "uploadFile": 30000,
+    "downloadFile": 30000
+  },
+  "debug": false,
+  "sitemapLocation": "sitemap.json"
+}

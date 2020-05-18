@@ -1,0 +1,341 @@
+const config = require('../config')
+const CryptoJS = require('CryptoJS/aes')
+//----------通用请求---------------
+//发送请求
+function wxrequest(json,func){
+  wx.showLoading({
+    title: '加载中',
+    mask:true
+  })
+  var requestTime=new Date().getTime();
+  wx.request({
+    url: config.myUrl,
+    data: {'Content': JSON.stringify(json)},
+    method: 'GET',
+    header: {
+      'content-type':'application/json',
+      'cache-control': 'no-cache',
+      'Access-Control-Allow-Origin': '*'
+    },
+    dataType: 'JSON',
+    success: function(res){
+      var a=JSON.parse(res.data)
+      var b=JSON.parse(a)
+      console.log('发出：' + JSON.stringify(json))
+      console.log('获取：' + JSON.stringify(JSON.parse(a)))
+      if(b.Status=='executing'){
+        setTimeout(function(){
+          wxrequest(json, func)
+        },1000)
+      }
+      wx.hideLoading()
+      func(b)
+    },
+    fail:function(err){
+      console.log(err)
+      if(err.errMsg.indexOf('timeout')>0){
+        wxrequest(json, func)
+      }else{
+        wx.hideLoading()
+        wx.getNetworkType({
+          success: function (res3) {
+            if(res3.networkType=='none'){
+              wx.showModal({
+                title: '无网络',
+                content: '请检查网络状态',
+                showCancel:false
+              })
+            }else{
+              wx.showModal({
+                title: '网络不给力',
+                content: '请重试',
+                showCancel:false
+              })
+            }
+          },
+          fail: function (res3) {
+            wx.showModal({
+              title: '无法获取当前网络状态',
+              content: '请稍后重试',
+              showCancel:false
+            })
+          }
+        })
+      }
+    },
+    complete:function(allres){
+    console.log('本次请求('+json.TransactionCode+')耗时：'+(new Date().getTime()-requestTime)/1000+'秒，状态为：'+allres.statusCode)
+    }
+  })
+}
+//通用访问函数
+function getJson(action, obj, func) {
+  var app = getApp()
+  var json = {}
+  for (var key in config.appJson) {
+    json[key] = config.appJson[key]
+  }
+  if(app.globalData.userInfo){
+    json['f_OpenID'] = app.globalData.userInfo.f_OpenID
+    json['f_UnionID'] = app.globalData.userInfo.f_UnionID
+  }
+  json['TransactionCode'] = action
+  json['TransactionID']=guid()
+  for (var key in obj) {
+    json[key] = obj[key]
+  }
+  wxrequest(json, func)
+}
+//--------全局变量设置--------------
+//获取用户信息,func(返回的用户信息)
+function getOpenId(func){
+  wx.login({
+    success: function (res) {
+      getJson('GetOpenID',{'WeChatCode':res.code},function(res1) {
+        if (res1.Status=='success') {
+          getApp().globalData.openId = res1.Result
+          refreshUserInfo(func)
+        } else {
+          wx.showModal({
+            title:'获取openid失败',
+            content:res1.Result,
+            showCancel:false,
+            confirmText:'重试',
+            complete:function(){
+              getOpenId()
+            }
+          })
+        }
+      })
+    },
+    fail:function(err) {
+      console.log(err)
+      wx.showModal({
+        title: '微信登录失败',
+        content: '请重新登录',
+        showCancel:false,
+        confirmText:'重试',
+        complete:function(){
+          getOpenId()
+        }
+      })
+    }
+  })
+}
+//刷新用户信息,func(返回的用户信息)
+function refreshUserInfo(func){
+  var app = getApp()
+  if(!app.globalData.openId){
+    getOpenId(func)
+    return
+  }
+  getJson('GetUserInfo', {'f_OpenID':app.globalData.openId},function(res2){
+    wx.stopPullDownRefresh()
+    if (res2.Status=='success') {
+      if (res2.User.f_OpenID == null || res2.User.f_OpenID=='') {
+        wx.navigateTo({
+          url: '/pages/register/register?type=0',
+        })
+      } else {
+        app.globalData.userInfo = res2.User
+        if(func)func(res2.User)
+      }
+    } else {
+      wx.showModal({
+        title: '获取用户信息失败',
+        content: res2.Result,
+        confirmText:'重试',
+        success:function(){
+          refreshUserInfo()
+        }
+      })
+    }
+  })
+}
+//刷新小区列表
+function refreshGroups(func) {
+  var app = getApp()
+  var courts =getJson('GetCourts', {}, function (res) {
+    if (res.Status == 'success') {
+      if (res.Groups.length < 1) {
+        notice('加载小区失败', '小区列表为空', function () {
+          wx.redirectTo({
+            url: '/pages/index/index',
+          })
+        })
+        return
+      }
+      app.globalData.groups = res.Groups;
+      if (!res.Groups[app.globalData.courtindex]) {
+        app.globalData.courtindex = 0
+      }
+      if(func)func();
+    }
+  });
+}
+
+
+//通用提示
+function notice(tit,cont,func) {
+  wx.showModal({
+    title: tit,
+    content: cont,
+    showCancel: false,
+    confirmText: "确定",
+    complete:func
+  })
+}
+//提示：只显示内容和确定按钮
+function showErr(err){
+  wx.showModal({
+    content: err,
+    showCancel: false,
+    confirmText: "确定"
+  })
+}
+//向自己的手机发送验证码
+function sendIdentify(openid,code,tel,func){
+  var json = config.telJson
+  json['Code']=code
+  json['f_OpenID']=openid
+  json['f_Tel']=tel
+  json['TransactionID']=guid()
+  wxrequest(json,func)
+}
+//获取用户的小区列表
+/*function getCourts(openid,func){
+  var json = config.getCourtsJson
+  json['f_OpenID']=openid
+  wxrequest(json,func)
+}*/
+//获取用户某小区的家庭成员
+function getFamily(openid,courtid,func){
+  var json= config.getFamilyJson
+  json['f_OpenID']=openid
+  json['CourtID']=courtid
+  json['TransactionID']=guid()
+  wxrequest(json,func)
+}
+//获取用户某小区的钥匙列表
+function getKeyList(openid,courtid,func){
+  var json=config.keylistJson
+  json['f_OpenID']=openid
+  json['CourtID']=courtid
+  json['TransactionID']=guid()
+  wxrequest(json,func)
+}
+//扫码1-在线
+function scanopendoor(openid,unionid,userid,courtid,devid,time,secret,door,func){
+  var json=config.scanJson1
+  json['f_OpenID']=openid
+  json['f_unionID']=unionid
+  json['f_userid']=userid
+  json['CourtID']=courtid
+  json['Devid']=devid
+  json['Time']=time
+  json['Secret']=secret
+  json['InOutState']=door
+  json['TransactionID']=guid()
+  wxrequest(json,func)
+}
+//扫码2-离线/显示密码
+function scanshowpassword(openid,unionid,userid,courtid,devid,time,secret,m,func){
+  var json=config.scanJson2
+  json['f_OpenID']=openid
+  json['f_unionID'] = unionid
+  json['f_userid']=userid
+  json['CourtID']=courtid
+  json['Devid']=devid
+  json['Time']=time
+  json['Secret']=secret
+  json['DynamicPassword']=m
+  json['TransactionID']=guid()
+  wxrequest(json,func)
+}
+//扫码3-注册权限
+function applypermission(openid,unionid,userid,time,secret,courtid,func){
+  var json=config.scanJson3
+  json['f_OpenID'] = openid
+  json['f_UnionID']=unionid
+  json['UserID']=userid
+  json['Time']=time
+  json['Secret']=secret
+  json['CourtID']=courtid
+  json['TransactionID']=guid()
+  wxrequest(json,func)
+}
+//添加家庭成员
+function addFamily(openid,userid,func){
+  var json=config.addFamilyJson
+  json['f_OpenID']=openid
+  json['FamilyMemberID']=userid
+  json['TransactionID']=guid()
+  wxrequest(json,func)
+}
+
+//刷新小区信息
+
+
+//------内部js接口--------
+//时间处理
+function formatTime(date){
+  return date.getFullYear()+formatNumber(date.getMonth()+1)+formatNumber(date.getDate())+formatNumber(date.getHours())+formatNumber(date.getMinutes())+formatNumber(date.getSeconds())
+}
+function formatNumber(n){
+  n = n.toString()
+  return n[1]?n:'0'+n
+}
+//获取guid
+function guid(){
+  return ('xxxxxxxx-xxxx-4xxx-yxxx-'+formatTime(new Date())).replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+//钥匙加密
+function encode(content){
+  return (""+CryptoJS.AES.encrypt(content, config.mykey)).replace(/\n/g, "")
+}
+function decode(content){
+  return (CryptoJS.AES.decrypt(content, config.mykey).toString(CryptoJS.enc.Utf8))
+}
+function base64_encode(str){
+  return (""+CryptoJS.enc.Base64.stringify(str))
+}
+function base64_decode(str){
+  return (""+CryptoJS.enc.Base64.parse(str))
+}
+//设置本js接口
+module.exports = {
+  getJson: getJson,
+
+  getOpenId:getOpenId,
+  refreshUserInfo:refreshUserInfo,
+
+  formatTime:formatTime,
+  formatNumber:formatNumber,
+  encode:encode,
+  decode:decode,
+  base64_encode: base64_encode,
+  base64_decode: base64_decode,
+
+  //wxrequest:wxrequest
+  showErr:showErr,
+  notice:notice,//通用提示
+
+  //getOpenIdByCode: getOpenIdByCode,
+  //getUserByOpenId: getUserByOpenId,
+  //getUserByCode: getUserByCode,
+  //register:register,
+  sendIdentify:sendIdentify,
+  //getCourts: getCourts,
+  getFamily: getFamily,
+  getKeyList: getKeyList,
+  scanopendoor: scanopendoor,
+  scanshowpassword: scanshowpassword,
+  applypermission: applypermission,
+  addFamily:addFamily,
+  refreshUserInfo: refreshUserInfo,
+  refreshGroups: refreshGroups
+}
+

@@ -1,0 +1,16 @@
+<view class='container'>
+  <view class='head'>{{thisCourtName}}</view>
+  <view class='body'>
+    <view class='view1'>输入充值金额</view>
+    <view class='view2'>
+      <text>¥</text><input type='digit' bindinput='inputMoney' value='{{total}}'/>
+    </view>
+    <view class='view3'>
+      <view class='view31 {{now1}}' bindtap='set50'>50元</view>
+      <view class='view32 {{now2}}' bindtap='set100'>100元</view>
+      <view class='view33 {{now3}}' bindtap='set200'>200元</view>
+    </view>
+    <view class='view5'><text class='view43'>本次缴费将收取手续费</text><text class='view42'>{{bee}}元</text></view>
+    <button type='primary' disabled='{{disabled}}' bindtap='chargeMoney'>确认充值</button>
+  </view>
+</view>
