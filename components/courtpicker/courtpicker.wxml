@@ -1,2 +1,2 @@
 <!--components/courtpicker/courtpicker.wxml-->
-  <view class='city'  wx:for="{{courts}}" data-code="{{courts.f_id}}" wx:key="{{item.f_id}}">{{item.GroupName}}</view>
+<text>components/courtpicker/courtpicker.wxml</text>

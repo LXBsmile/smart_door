@@ -750,10 +750,11 @@
     /**
      * 新增$this参数，传入组件的this,兼容在组件中生成
      */ 
-    draw: function (str, canvas, cavW, cavH,title,func, $this, ecc) {
+    draw: function (str, canvas, cavW, cavH, moffset, func, $this, ecc) {
       var that = this;
       ecclevel = ecc || ecclevel;
       canvas = canvas || _canvas;
+      moffset = moffset || { x: 0, y: 0 };
       if (!canvas) {
         console.warn('No canvas provided to draw QR code in!')
         return;
@@ -764,27 +765,27 @@
 
       var frame = that.getFrame(str),
         // 组件中生成qrcode需要绑定this 
-        ctx = wx.createCanvasContext(canvas,$this),
+        ctx = wx.createCanvasContext(canvas, $this),
         px = Math.round(size / (width + 8));
       var roundedSize = px * (width + 8),
         offset = Math.floor((size - roundedSize) / 2);
       size = roundedSize;
       //ctx.clearRect(0, 0, cavW, cavW);
       ctx.setFillStyle('#ffffff')
-      ctx.fillRect(0, 0, cavW, cavW);
+      ctx.fillRect(0, 0, 1000, 1000);
       ctx.setFillStyle('#000000');
       for (var i = 0; i < width; i++) {
         for (var j = 0; j < width; j++) {
           if (frame[j * width + i]) {
-            ctx.fillRect(px * (4 + i) + offset, px * (4 + j) + offset, px, px);
+            ctx.fillRect(px * (4 + i) + offset + moffset.x, px * (4 + j) + offset + moffset.y, px, px);
           }
         }
       }
-      if(title){
-        ctx.setFontSize(px*3)
-        ctx.fillText(title,px*19,px*73)
-      }
-      ctx.draw(false,func);
+      // if(title){       
+      //   ctx.setFontSize(px*3)
+      //   ctx.fillText(title,px*19,px*73)
+      // }
+      ctx.draw(false, func);
     }
   }
   module.exports = { api }

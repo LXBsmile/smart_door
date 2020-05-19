@@ -15,6 +15,9 @@ Page({
     groupindex: 0,
     index:'0'
   },
+  onShow: function () {
+    util.refreshUserInfo()
+  },
   onReady: function (options) {
     var that=this
     that.setData({

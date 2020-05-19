@@ -1,9 +1,9 @@
 <view class="container">
   <image class='img_bg' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
   <view class='yellow'></view>
-  <image class="img-box" bindtap="previewImg" src='{{imgURL}}' hidden='{{hideImg}}'></image>
+  <!-- <image class="img-box"  style="width:100%;height:{{previewImage?qr_height:max_height}}px;margin-top:25px;" bindtap="previewImg" src='{{imgURL}}' hidden='{{hideImg}}'></image> -->
   <view class="canvas-box">
-    <canvas style="width:300px;height:300px;" canvas-id="mycanvas"/>
+    <canvas style="width:100%;height:{{previewImage?qr_height:max_height}}px;margin-top:25px;" bindtouchstart="showQR" canvas-id="mycanvas"/>
   </view>
   <view class="form1">
     <timepicker id='timepicker' enddate='{{validity}}' bind:outputTime='changeTime'>

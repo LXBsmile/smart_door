@@ -41,6 +41,7 @@ Page({
   onReady: function () {
   },
   onShow: function () {
+    util.refreshUserInfo()
     var that=this
     that.getVisited()
   },

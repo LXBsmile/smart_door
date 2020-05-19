@@ -3,8 +3,6 @@ const app = getApp()
 const util = require('../../utils/util')
 const QR = require("../../utils/qrcode.js")
 var timeflag=false
-var timeInial=false;
-var timeEclaps = 0;
 var timer
 var flag = false
 Page({
@@ -18,43 +16,48 @@ Page({
     backend:{}
   },
   onReady:function(){
+    setTimeout(function(){flag = true}, 500)
+    //flag=true
+    //setTimeout(function(){flag = true}, 2000)
   },
   onShow:function(options){
-    timeflag=true
-    var that = this
-    var user = app.globalData.userInfo;
 
-    util.refreshGroups(function(){
-
-      that.setData({
-        courts: app.globalData.groups,
-        index: app.globalData.courtindex
-      })
-      that.setData({
-        thisCourtName: app.globalData.groups[app.globalData.courtindex].GroupName,
-        thisCourtID: app.globalData.groups[app.globalData.courtindex].f_id
-      })
-
-      that.drawQR(that.data.thisCourtID)
-      if (!timeInial) {
-        timeInial = true;
-        setInterval(function () {
-          if (timeflag == true) {
-            timeEclaps += 1;
-            console.log('每三十秒一轮回' + timeEclaps);
-            if (timeEclaps == 30)//没三十秒一轮回
-            {
-              timeEclaps = 0;
-              if (that.data.thisCourtID != -1){
-              that.drawQR(that.data.thisCourtID);
-              }
-
-            }
-          }
-        }, 1000)
+    util.refreshUserInfo(()=>{
+      var that = this
+      var user = app.globalData.userInfo
+      if (user== null || user.f_UnionID==''){
+        return;
       }
-    })
 
+      var courts = util.getJson('GetCourts', {}, function (res) {
+        if (res.Status == 'success') {
+          if (res.Groups.length < 1) {
+            util.notice('加载小区失败', '小区列表为空', function () {
+              wx.redirectTo({
+                url: '/pages/index/index',
+              })
+            })
+            return
+          }
+          if (!res.Groups[app.globalData.courtindex]) {
+            app.globalData.courtindex = 0
+          }
+          that.setData({
+            courts: res.Groups,
+            index: app.globalData.courtindex
+          })
+          that.setData({
+            thisCourtName: res.Groups[app.globalData.courtindex].GroupName,
+            thisCourtID: res.Groups[app.globalData.courtindex].f_id
+          })
+          that.drawQR(that.data.thisCourtID)
+        } else {
+          util.notice('加载小区信息失败', res.Result)
+        }
+      })
+    });
+    timeflag=true
+    
   },
   onUnload:function(){
     /*var that=this
@@ -74,40 +77,19 @@ Page({
       wx.stopPullDownRefresh()
     },1000)
   },
-
-  bindtapToRefreshUsers:function(){
-    var that = this;
-    util.refreshGroups(function () {     
-      if (app.globalData.groups.length>0){
-        app.globalData.groups.push({ "f_id": "20", "GroupName": "AAA示范小区--test", "f_notice": null, "f_unit": "AAA示范小区测试", "f_tel": "0755-88888888", "f_address": "中国。深圳", "f_mail": "szcjwzn@163.com", "f_Web": "cjwkj.com", "f_introduce": null })
-        console.log(app.globalData.groups)
-        that.setData({
-          courts: app.globalData.groups,
-          index: 999
-        })
-        console.log("****************************")
-        console.log(that.data.courts);
-        that.setData({
-          thisCourtName: app.globalData.groups[app.globalData.courtindex].GroupName,
-          thisCourtID: app.globalData.groups[app.globalData.courtindex].f_id,
-          //index: app.globalData.courtindex
-        })
-
-      }
-    })
-  },
   selectcourt: function (e) {
-    var that = this;
     var index = e.detail.value
-    console.log(e)
+    var that = this
     that.setData({
       thisCourtName: that.data.courts[index].GroupName,
-      thisCourtID: that.data.courts[index].f_id
+      thisCourtID: that.data.courts[index].f_id,
+      index: app.globalData.courtindex,
+      groupindex: index,
+      hideCanvas:false,
+      index:index
     })
-    if (that.data.thisCourtID != -1){
-      that.drawQR(that.data.thisCourtID)
-    }
-    
+    app.globalData.courtindex = index//记忆小区
+    that.drawQR(that.data.thisCourtID)
   },
   drawQR: function(courtID){
     var that = this
@@ -121,17 +103,14 @@ Page({
             value: 0.8,
           })*/
           console.log(content)
-          QR.api.draw(content, 'mycanvas', 300, 300);
-          /*if (!that.data.hideCanvas && timeflag) {
-            that.drawQR(that.data.thisCourtID)
-          }*/
-          //if (!that.data.hideCanvas&&timeflag){
-            //timer=setTimeout(function () {
-             // if (!that.data.hideCanvas&&timeflag) {
-               // that.drawQR(that.data.thisCourtID)
-             // }
-           // }, 30000)
-          //}
+          QR.api.draw(content, 'mycanvas', 200, 200);
+          if (!that.data.hideCanvas&&timeflag){
+            timer=setTimeout(function () {
+              if (!that.data.hideCanvas&&timeflag) {
+                that.drawQR(that.data.thisCourtID)
+              }
+            }, 30000)
+          }
         }else{
           that.setData({
             hideCanvas: true
@@ -164,15 +143,21 @@ Page({
     }
   },
   switchtab1:function(){
-    timeflag = false
-    wx.redirectTo({
-      url: '/pages/index/index',
-    })
+    if(flag){
+      flag=false
+      setTimeout(function(){flag = true}, 1000)
+      wx.redirectTo({
+        url: '/pages/index/index',
+      })
+    }
   },
   switchtab3:function(){
-    timeflag = false;
-    wx.redirectTo({
-      url: '/pages/my/my',
-    })
+    if(flag){
+      flag=false
+      setTimeout(function(){flag = true}, 1000)
+      wx.redirectTo({
+        url: '/pages/my/my',
+      })
+    }
   }
 })

@@ -21,7 +21,11 @@ var config = {
     scanJson2: { "Format": "WeChat_SmallApp", "f_OpenID": "", "f_unionID": "","TransactionCode": "DisplayPassword", "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323", "f_userid": "", "CourtID": "", "DataBaseURL": "", "Devid": "", "Time": "", "Type": "2", "Secret": "", "DynamicPassword": "" },
     scanJson3: { "Format": "WeChat_SmallApp", "f_OpenID": "","f_UnionID ": "", "TransactionCode": "ApplyPermission", "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323", "UserID": "", "Time": "","Type":"3", "Secret": "", "CourtID":"" },
     addFamilyJson:{"Format": "WeChat_SmallApp", "f_OpenID": "", "TransactionCode": "UpdateFamilyRelations", "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323", "FamilyMemberID":"" },
-    openDoorJson: { "Format": "WeChat_SmallApp", "f_OpenID":"", "f_UnionID": "", "TransactionCode": "OpenDoorWithSharedKey", "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323", "Devid": "", "CourtID":""}
+    openDoorJson: { "Format": "WeChat_SmallApp", "f_OpenID":"", "f_UnionID": "", "TransactionCode": "OpenDoorWithSharedKey", "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323", "Devid": "", "CourtID":""},
+  APP_CONFIG: {   
+    QR_WIDTH: 150,//二维码宽
+    QR_HEIGHT: 150//二维码高
+  },
 }
 
 module.exports = config

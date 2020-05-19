@@ -1,13 +1,22 @@
-.section{
-  width:fit-content;
+.section {
+  width: fit-content;
   min-width: 12%;
-  display:inline-block;
+  display: inline-block;
 }
-.timepicker{
-  margin:5% 0%;
+
+.timepicker {
+  margin: 5% 0%;
   height: 1.5rem;
-  align-items:center;
+  align-items: center;
 }
-.slot{
+
+.slot {
+  display: inline-block;
+}
+
+.picker-canchange {
+  border-bottom: blue thin solid;
+  text-align: center;
+  padding: 0 2px;
   display: inline-block;
 }

@@ -1,13 +1,8 @@
-var config = require('./config')
 var util = require('./utils/util')
+const config = require('./config.js')
 App({
-  onLaunch: function () {    
-    var _this = this;
-    wx.getNetworkType({
-      success: function (res3) {        
-        _this.globalData.offline = res3.networkType=="none";    
-      }
-      });//初始化网络状态
+  onLaunch: function () {
+    var _this=this;
     /*wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {
@@ -25,10 +20,10 @@ App({
       fail(err){
       }
     })*/
-    
     wx.onNetworkStatusChange(function (res) {
-      _this.globalData.offline = !res.isConnected;    
-      _this.globalData.networkType = res.networkType;   
+      _this.globalData.offline = !res.isConnected;
+      console.log(_this.globalData.offline, res.isConnected)
+      _this.globalData.networkType = res.networkType;
     })
   },
   onHide: function () {
@@ -56,10 +51,10 @@ App({
   globalData: {
     userInfo: null,//我的账户信息
     openId:null,//我的openid
-    courtindex:0,
-    groups:null,
-    offline:false,
-    networkType:"4g"
+    courtindex:0
+  },
+  getConfig() {
+    return config;
   },
   thisCourt:{}
 })

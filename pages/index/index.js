@@ -7,15 +7,16 @@ Page({
     password:'',
     result: ''
   },
+  onShow:function(){
+    
+  },
   onReady:function(){
     setTimeout(function(){flag = true}, 500)
     //flag=false
     //setTimeout(function(){flag = true}, 2000)
   },
   onLoad:function(){
-    if(!app.globalData.userInfo){
-      util.refreshUserInfo()
-    }
+    util.refreshUserInfo()
   },
   onPullDownRefresh:function(){
     app.globalData.userInfo = null

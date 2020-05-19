@@ -5,9 +5,6 @@ Component({
   },
   data: {
   },
-  ready:function(){
-
-  },
-  attached:function() {
+  methods: {
   }
 })

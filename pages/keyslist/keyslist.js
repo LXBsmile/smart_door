@@ -10,6 +10,7 @@ Page({
     index:'0'
   },
   onShow: function () {
+    util.refreshUserInfo()
     var that=this
     var user = app.globalData.userInfo
     var courts = util.getJson('GetCourts', {},function(res){
@@ -41,22 +42,6 @@ Page({
   },
   onPullDownRefresh: function () {
     this.getKeyList()
-  },
-  bindtapToRefreshUsers: function () {
-    var that = this;
-    util.refreshGroups(function () {
-      if (app.globalData.groups.length > 0) {
-        that.setData({
-          courts: app.globalData.groups,
-          index: app.globalData.courtindex
-        })
-        that.setData({
-          thisCourtName: app.globalData.groups[app.globalData.courtindex].GroupName,
-          thisCourtID: app.globalData.groups[app.globalData.courtindex].f_id
-        })
-      }
-
-    })
   },
   selectcourt:function(e){
     var index=e.detail.value

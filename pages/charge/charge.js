@@ -35,6 +35,7 @@ Page({
   onReady: function () {
   },
   onShow: function () {
+    util.refreshUserInfo()
   },
   onHide: function () {
   },

@@ -1,6 +1,5 @@
 const config = require('../config')
 const CryptoJS = require('CryptoJS/aes')
-
 //----------通用请求---------------
 //发送请求
 function wxrequest(json,func){
@@ -8,14 +7,7 @@ function wxrequest(json,func){
     title: '加载中',
     mask:true
   })
-  console.log(json.TransactionCode)
-  const app = getApp();
   var requestTime=new Date().getTime();
-  console.log(app.globalData.offline);
-  if (app.globalData.offline){
-    var info=wx.getStorageSync("test");
-    console.log(info)
-  }
   wx.request({
     url: config.myUrl,
     data: {'Content': JSON.stringify(json)},
@@ -40,7 +32,7 @@ function wxrequest(json,func){
       func(b)
     },
     fail:function(err){
-      console.log(err)
+      // console.log(err)
       if(err.errMsg.indexOf('timeout')>0){
         wxrequest(json, func)
       }else{
@@ -72,7 +64,7 @@ function wxrequest(json,func){
       }
     },
     complete:function(allres){
-    console.log('本次请求('+json.TransactionCode+')耗时：'+(new Date().getTime()-requestTime)/1000+'秒，状态为：'+allres.statusCode)
+    // console.log('本次请求('+json.TransactionCode+')耗时：'+(new Date().getTime()-requestTime)/1000+'秒，状态为：'+allres.statusCode)
     }
   })
 }
@@ -83,9 +75,18 @@ function getJson(action, obj, func) {
   for (var key in config.appJson) {
     json[key] = config.appJson[key]
   }
-  if(app.globalData.userInfo){
-    json['f_OpenID'] = app.globalData.userInfo.f_OpenID
-    json['f_UnionID'] = app.globalData.userInfo.f_UnionID
+
+
+  if (action != "GetOpenID" && action != "GetUserInfo" && action != "GetMobileMessageValidateSwitch" && action !="RegisterUser"){
+
+    //若用户信息为空，则可能之前获取用户信息异常，重新获取用户信息
+    if (app.globalData.userInfo == null ){
+      getOpenId(func);
+    }
+    if(app.globalData.userInfo){
+      json['f_OpenID'] = app.globalData.userInfo.f_OpenID
+      json['f_UnionID'] = app.globalData.userInfo.f_UnionID
+    }
   }
   json['TransactionCode'] = action
   json['TransactionID']=guid()
@@ -117,7 +118,7 @@ function getOpenId(func){
       })
     },
     fail:function(err) {
-      console.log(err)
+      // console.log(err)
       wx.showModal({
         title: '微信登录失败',
         content: '请重新登录',
@@ -144,6 +145,10 @@ function refreshUserInfo(func){
         wx.navigateTo({
           url: '/pages/register/register?type=0',
         })
+      } else if (res2.User.f_UnionID == null || res2.User.f_UnionID == ''){
+        wx.navigateTo({
+          url: '/pages/reg2/reg2?id=' + res2.User.f_id,
+        })
       } else {
         app.globalData.userInfo = res2.User
         if(func)func(res2.User)
@@ -159,27 +164,6 @@ function refreshUserInfo(func){
       })
     }
   })
-}
-//刷新小区列表
-function refreshGroups(func) {
-  var app = getApp()
-  var courts =getJson('GetCourts', {}, function (res) {
-    if (res.Status == 'success') {
-      if (res.Groups.length < 1) {
-        notice('加载小区失败', '小区列表为空', function () {
-          wx.redirectTo({
-            url: '/pages/index/index',
-          })
-        })
-        return
-      }
-      app.globalData.groups = res.Groups;
-      if (!res.Groups[app.globalData.courtindex]) {
-        app.globalData.courtindex = 0
-      }
-      if(func)func();
-    }
-  });
 }
 
 
@@ -343,7 +327,6 @@ module.exports = {
   scanshowpassword: scanshowpassword,
   applypermission: applypermission,
   addFamily:addFamily,
-  refreshUserInfo: refreshUserInfo,
-  refreshGroups: refreshGroups
+  refreshUserInfo: refreshUserInfo
 }
 
