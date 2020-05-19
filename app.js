@@ -1,7 +1,13 @@
 var config = require('./config')
 var util = require('./utils/util')
 App({
-  onLaunch: function () {
+  onLaunch: function () {    
+    var _this = this;
+    wx.getNetworkType({
+      success: function (res3) {        
+        _this.globalData.offline = res3.networkType=="none";    
+      }
+      });//初始化网络状态
     /*wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {
@@ -19,6 +25,11 @@ App({
       fail(err){
       }
     })*/
+    
+    wx.onNetworkStatusChange(function (res) {
+      _this.globalData.offline = !res.isConnected;    
+      _this.globalData.networkType = res.networkType;   
+    })
   },
   onHide: function () {
     var self = this
@@ -46,7 +57,9 @@ App({
     userInfo: null,//我的账户信息
     openId:null,//我的openid
     courtindex:0,
-    groups:null
+    groups:null,
+    offline:false,
+    networkType:"4g"
   },
   thisCourt:{}
 })

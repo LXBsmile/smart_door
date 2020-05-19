@@ -1,5 +1,6 @@
 const config = require('../config')
 const CryptoJS = require('CryptoJS/aes')
+
 //----------通用请求---------------
 //发送请求
 function wxrequest(json,func){
@@ -7,7 +8,14 @@ function wxrequest(json,func){
     title: '加载中',
     mask:true
   })
+  console.log(json.TransactionCode)
+  const app = getApp();
   var requestTime=new Date().getTime();
+  console.log(app.globalData.offline);
+  if (app.globalData.offline){
+    var info=wx.getStorageSync("test");
+    console.log(info)
+  }
   wx.request({
     url: config.myUrl,
     data: {'Content': JSON.stringify(json)},
@@ -21,8 +29,8 @@ function wxrequest(json,func){
     success: function(res){
       var a=JSON.parse(res.data)
       var b=JSON.parse(a)
-      console.log('发出：' + JSON.stringify(json))
-      console.log('获取：' + JSON.stringify(JSON.parse(a)))
+      // console.log('发出：' + JSON.stringify(json))
+      // console.log('获取：' + JSON.stringify(JSON.parse(a)))
       if(b.Status=='executing'){
         setTimeout(function(){
           wxrequest(json, func)
