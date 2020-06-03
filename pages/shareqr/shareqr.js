@@ -18,6 +18,7 @@ Page({
     firstIn:true
   },
   onShow: function () {
+    
     util.refreshUserInfo();
     if (!this.data.firstIn){
       this.generateQR();

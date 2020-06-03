@@ -31,6 +31,13 @@ Page({
       if(page=='showQR'){
         this.getScan()
       }else{
+        if(app.globalData.offline&&e.currentTarget.dataset.online){
+          wx.showModal({
+            title: '无网络',
+            content: '该操作无网络无法访问',
+          })
+          return;
+        }
         wx.navigateTo({
           url:'/pages/'+page+'/'+page,
         })

@@ -3,6 +3,11 @@ const config = require('./config.js')
 App({
   onLaunch: function () {
     var _this=this;
+    wx.getNetworkType({
+      success: function (res3) {
+        _this.globalData.offline = res3.networkType == "none";
+      }
+    });//初始化网络状态 
     /*wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {
@@ -51,7 +56,10 @@ App({
   globalData: {
     userInfo: null,//我的账户信息
     openId:null,//我的openid
-    courtindex:0
+    groups: null, 
+    courtindex:0,
+    offline: false,
+    networkType: "4g" 
   },
   getConfig() {
     return config;

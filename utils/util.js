@@ -7,7 +7,16 @@ function wxrequest(json,func){
     title: '加载中',
     mask:true
   })
-  var requestTime=new Date().getTime();
+  const app = getApp();
+  var requestTime = new Date().getTime(); 
+  if (app.globalData.offline) {
+    var info = wx.getStorageSync(json.TransactionCode);   
+    if(info!=""){
+      func(info);
+      wx.hideLoading()
+      return;
+    }
+  } 
   wx.request({
     url: config.myUrl,
     data: {'Content': JSON.stringify(json)},
@@ -21,18 +30,16 @@ function wxrequest(json,func){
     success: function(res){
       var a=JSON.parse(res.data)
       var b=JSON.parse(a)
-      // console.log('发出：' + JSON.stringify(json))
-      // console.log('获取：' + JSON.stringify(JSON.parse(a)))
       if(b.Status=='executing'){
         setTimeout(function(){
           wxrequest(json, func)
         },1000)
       }
       wx.hideLoading()
+      wx.setStorageSync(json.TransactionCode, b);
       func(b)
     },
     fail:function(err){
-      // console.log(err)
       if(err.errMsg.indexOf('timeout')>0){
         wxrequest(json, func)
       }else{
@@ -42,7 +49,7 @@ function wxrequest(json,func){
             if(res3.networkType=='none'){
               wx.showModal({
                 title: '无网络',
-                content: '请检查网络状态',
+                content: '该页面信息未缓存',
                 showCancel:false
               })
             }else{
@@ -98,6 +105,16 @@ function getJson(action, obj, func) {
 //--------全局变量设置--------------
 //获取用户信息,func(返回的用户信息)
 function getOpenId(func){
+  const app = getApp();
+  var requestTime = new Date().getTime();
+  if (app.globalData.offline) {
+    var info = wx.getStorageSync("GetOpenID");
+    if (info != "") {
+      app.globalData.openId = info.Result
+      refreshUserInfo(func);
+      return;
+    }
+  } 
   wx.login({
     success: function (res) {
       getJson('GetOpenID',{'WeChatCode':res.code},function(res1) {

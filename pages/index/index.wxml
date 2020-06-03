@@ -19,7 +19,8 @@
       id:'paycenter',
       name:'缴费中心',
       url:'/pages/paycenter/paycenter',
-      image:'/images/home_jfzx.png'
+      image:'/images/home_jfzx.png',
+      online:true
     },{
       id:'anno',
       name:'公告中心',
@@ -39,7 +40,7 @@
   </view>
   <view class="desktop">
     <block wx:for-items="{{m1.menu}}" wx:key="item.id">
-      <view id="{{item.id}}" bindtap="clickMenu" class="navigator-menu" hover-class="view-menu">
+      <view id="{{item.id}}" bindtap="clickMenu" data-online="{{item.online}}" class="navigator-menu" hover-class="view-menu">
         <image class="list-img" src="{{item.image}}"></image>
         <view class="list-text">{{item.name}}</view>
       </view>

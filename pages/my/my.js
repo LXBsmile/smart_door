@@ -35,10 +35,16 @@ Page({
     setTimeout(function(){flag = true}, 500)
   },
   onShow: function () {
-    util.refreshUserInfo()
+     if (!app.globalData.offline) {
+      util.refreshUserInfo()
+    }
+  
     var that=this
     if (that.data.thisuser.f_Tel != app.globalData.userInfo.f_Tel){
-      that.setData({thisuser:app.globalData.userInfo})
+      if (!app.globalData.offline) {
+        that.setData({ thisuser: app.globalData.userInfo })
+      }
+     
     }
     if(that.data.groupindex!=app.globalData.courtindex){
       that.setData({
@@ -113,6 +119,13 @@ Page({
       })
   },
   modifytel:function(){
+    if (app.globalData.offline) {
+      wx.showModal({
+        title: '无网络',
+        content: '该操作无网络无法访问',
+      })
+      return;
+    }
     wx.navigateTo({
       url: '/pages/register/register?type=1',
     })

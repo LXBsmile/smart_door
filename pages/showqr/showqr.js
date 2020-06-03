@@ -101,8 +101,7 @@ Page({
           var content = 'Time:' + ("00" + date.getFullYear()).substr(-2) + ("00" + (date.getMonth() + 1)).substr(-2) + ("00" + date.getDate()).substr(-2) + ("00" + date.getHours()).substr(-2) + ("00" + date.getMinutes()).substr(-2) + ',Type:A1,Value:' + res.f_cardMsg
           /*wx.setScreenBrightness({
             value: 0.8,
-          })*/
-          console.log(content)
+          })*/          
           QR.api.draw(content, 'mycanvas', 200, 200);
           if (!that.data.hideCanvas&&timeflag){
             timer=setTimeout(function () {
