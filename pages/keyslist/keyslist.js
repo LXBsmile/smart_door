@@ -82,12 +82,12 @@ Page({
         if (res.Code == 'SHOWDEDUCTTIP') {
           wx.showModal({
             title: `提示`,
-            content: `开门需要扣费${res.Fee}`,
+            content: `本次需要扣费${res.Deduction}元，确认是否执行?`,
             success(res2) {
               if (res2.confirm) {
                 util.getJson('OpenDoorInSmallApp', {
                   "Devid": e.target.id,
-                  "CourtID": this.data.thisCourtID,
+                  "CourtID": that.data.thisCourtID,
                   OperationCode: ''
                 }, function(res3) {
                   if (res3.Status == 'success') {
@@ -101,7 +101,7 @@ Page({
                   }
                 })
               } else {
-                util.notice('开门失败', '取消开门')
+            
               }
             }
           })

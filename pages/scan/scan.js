@@ -64,7 +64,7 @@ Page({
               if (res.Code == 'SHOWDEDUCTTIP') {
                 wx.showModal({
                   title: `提示`,
-                  content: `开门需要扣费${res.Fee}`,
+                  content: `本次需要扣费${res.Deduction}元，确认是否执行?`,
                   success(res2) {
                     if (res2.confirm) {
                       util.scanopendoor(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.door, function(res3) {
@@ -75,7 +75,7 @@ Page({
                         }
                       }, "");
                     } else {
-                      that.gotoIndex('开门失败', '取消开门')
+                     
                     }
                   }
                 })
