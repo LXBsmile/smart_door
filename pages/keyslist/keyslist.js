@@ -89,21 +89,27 @@ Page({
                   "Devid": e.target.id,
                   "CourtID": this.data.thisCourtID,
                   OperationCode: ''
-                }, function(res2) {
-                  if (res2.Status == 'success') {
+                }, function(res3) {
+                  if (res3.Status == 'success') {
                     wx.showToast({
                       title: '开门成功',
                       mask: true,
                       duration: 1500
                     })
                   } else {
-                    util.notice('开门失败', '取消开门')
+                    util.notice('开门失败', res3.Result)
                   }
                 })
               } else {
                 util.notice('开门失败', '取消开门')
               }
             }
+          })
+        }else{
+          wx.showToast({
+            title: '开门成功',
+            mask: true,
+            duration: 1500
           })
         }
 

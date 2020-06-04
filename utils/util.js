@@ -234,7 +234,7 @@ function getKeyList(openid,courtid,func){
   wxrequest(json,func)
 }
 //扫码1-在线
-function scanopendoor(openid,unionid,userid,courtid,devid,time,secret,door,func){
+function scanopendoor(openid, unionid, userid, courtid, devid, time, secret, door, func, operationCode){
   var json=config.scanJson1
   json['f_OpenID']=openid
   json['f_unionID']=unionid
@@ -244,6 +244,7 @@ function scanopendoor(openid,unionid,userid,courtid,devid,time,secret,door,func)
   json['Time']=time
   json['Secret']=secret
   json['InOutState']=door
+  json["OperationCode"] = operationCode
   json['TransactionID']=guid()
   wxrequest(json,func)
 }

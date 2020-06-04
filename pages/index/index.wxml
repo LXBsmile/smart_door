@@ -14,7 +14,8 @@
       id:'showQR',
       name:'扫一扫',
       url:'',
-      image:'/images/code3.png'
+      image:'/images/code3.png',
+      online:true
     },{
       id:'paycenter',
       name:'缴费中心',
