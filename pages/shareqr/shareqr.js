@@ -15,6 +15,7 @@ Page({
     qr_width: config.APP_CONFIG.QR_WIDTH + 100,
     qr_height: info.windowHeight - 100,
     previewImage: false,
+    mg_left:info.windowWidth*4/100,
     firstIn:true
   },
   onShow: function () {
@@ -55,7 +56,7 @@ Page({
   changeTime:function(e){
     this.setData({inputDate:e.detail})
   },
-  generateQR:function(){
+  generateQR:function(e,yoffset){
     if(!this.data.previewImage){
       wx.showLoading({
         title: '二维码生成中',
@@ -64,11 +65,14 @@ Page({
     }
 
     var that=this
+    console.log(yoffset);
+    console.log((yoffset || that.data.mg_left));
     var content='Time:'+this.data.inputDate.substr(2)+',Type:A2,Value:'+this.data.msg
     var title='有效期: '+this.data.inputDate.substr(0,4)+'-'+this.data.inputDate.substr(4,2)+'-'+this.data.inputDate.substr(6,2)+' '+this.data.inputDate.substr(8,2)+':'+this.data.inputDate.substr(10)    
     QR.api.draw(content, 'mycanvas', config.APP_CONFIG.QR_WIDTH, config.APP_CONFIG.QR_HEIGHT, {
-      x: Math.round((info.windowWidth - config.APP_CONFIG.QR_WIDTH) / 2),
-      y: 0
+      x: Math.round((info.windowWidth - config.APP_CONFIG.QR_WIDTH) / 2 - (yoffset || that.data.mg_left)),
+      y: 20,
+      border_width: Math.round(info.windowWidth - 0.08 * info.windowWidth)
     },function(){
       setTimeout(function(){
         that.data.imgURL='1';
@@ -107,7 +111,7 @@ Page({
     this.setData({
       previewImage: true
     });
-    this.generateQR();
+    this.generateQR('e', 0.02 * info.windowWidth);
     var t = setTimeout(() => {
       wx.canvasToTempFilePath({
         canvasId: 'mycanvas',

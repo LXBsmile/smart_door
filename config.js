@@ -23,8 +23,8 @@ var config = {
     addFamilyJson:{"Format": "WeChat_SmallApp", "f_OpenID": "", "TransactionCode": "UpdateFamilyRelations", "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323", "FamilyMemberID":"" },
     openDoorJson: { "Format": "WeChat_SmallApp", "f_OpenID":"", "f_UnionID": "", "TransactionCode": "OpenDoorWithSharedKey", "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323", "Devid": "", "CourtID":""},
   APP_CONFIG: {   
-    QR_WIDTH: 150,//二维码宽
-    QR_HEIGHT: 150//二维码高
+    QR_WIDTH: 200,//二维码宽
+    QR_HEIGHT: 200//二维码高
   },
 }
 

@@ -122,7 +122,7 @@ Page({
     if (app.globalData.offline) {
       wx.showModal({
         title: '无网络',
-        content: '该操作无网络无法访问',
+        content: '无网络，请连接网络后再试！',
       })
       return;
     }

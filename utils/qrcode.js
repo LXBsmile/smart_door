@@ -754,7 +754,7 @@
       var that = this;
       ecclevel = ecc || ecclevel;
       canvas = canvas || _canvas;
-      moffset = moffset || { x: 0, y: 0 };
+      moffset = moffset || { x: 0, y: 0 ,border_width:300};
       if (!canvas) {
         console.warn('No canvas provided to draw QR code in!')
         return;
@@ -772,7 +772,7 @@
       size = roundedSize;
       //ctx.clearRect(0, 0, cavW, cavW);
       ctx.setFillStyle('#ffffff')
-      ctx.fillRect(0, 0, 1000, 1000);
+      ctx.fillRect(0, 0, moffset.border_width, 1000);
       ctx.setFillStyle('#000000');
       for (var i = 0; i < width; i++) {
         for (var j = 0; j < width; j++) {

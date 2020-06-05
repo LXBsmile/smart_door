@@ -3,7 +3,7 @@
   <view class='yellow'></view>
   <!-- <image class="img-box"  style="width:100%;height:{{previewImage?qr_height:max_height}}px;margin-top:25px;" bindtap="previewImg" src='{{imgURL}}' hidden='{{hideImg}}'></image> -->
   <view class="canvas-box">
-    <canvas style="width:100%;height:{{previewImage?qr_height:max_height}}px;margin-top:25px;" bindtouchstart="showQR" canvas-id="mycanvas"/>
+    <canvas style="width:100%;height:{{previewImage?qr_height:max_height}}px;margin-top:25px;margin-left:{{mg_left}}px;" bindtouchstart="showQR" canvas-id="mycanvas"/>
   </view>
   <view class="form1">
     <timepicker id='timepicker' enddate='{{validity}}' bind:outputTime='changeTime'>
