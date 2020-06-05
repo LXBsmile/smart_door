@@ -44,7 +44,7 @@
        </view>
       </block>
       </view>
-    <block wx:if='{{isMain}}'>
+    <block wx:if='{{isMain&&members.length<4}}'>
       <view class='view3'  hidden=''>
         <view class='view31'>添加成员
         </view>
