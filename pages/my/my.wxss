@@ -13,17 +13,19 @@
   margin-bottom:3%;
 }
 .view11{
-  width:28%;
+  width:200rpx;
   height:100%;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 10px;
 }
 .image1{
-  width:70%;
-  height:62%;
-  margin: 15%;
+  box-sizing: border-box;
+  width:180rpx;
+  height:180rpx;
+  /* margin: 15%; */
   border-radius: 50%;
 }
 .view111{
@@ -41,10 +43,14 @@
   align-items: center;
 }
 .view12{
-  width:70%;
+  display: flex;
+  flex-direction: column;
+  flex:1;
+  /* width:70%; */
 }
 .text11{
   color: white;
+  margin-bottom: 20px;
 }
 .text12{
   color: white;
@@ -52,11 +58,11 @@
 .view121{
   display: inline;
   color: white;
-  font-size: 50%;
+  font-size: 13px;
   vertical-align: middle;
   background-color: #e7541f;
   border-radius: 1rem;
-  padding:1.4% 2%;
+  padding:2.4% 4%;
   margin-left:2%;
 }
 .view121:active{
@@ -296,4 +302,10 @@ line-height:1.2rem;
   align-items: center;
   width:100%;
   height:100%;
+}
+
+.tabBar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

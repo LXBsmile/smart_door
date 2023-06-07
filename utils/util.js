@@ -2,61 +2,63 @@ const config = require('../config')
 const CryptoJS = require('CryptoJS/aes')
 //----------通用请求---------------
 //发送请求
-function wxrequest(json,func){
+function wxrequest(json, func) {
   wx.showLoading({
     title: '加载中',
-    mask:true
+    mask: true
   })
   const app = getApp();
-  var requestTime = new Date().getTime(); 
+  var requestTime = new Date().getTime();
   if (app.globalData.offline) {
-    var info = wx.getStorageSync(json.TransactionCode);   
-    if(info!=""){
+    var info = wx.getStorageSync(json.TransactionCode);
+    if (info != "") {
       func(info);
       wx.hideLoading()
       return;
     }
-  } 
+  }
   wx.request({
     url: config.myUrl,
-    data: {'Content': JSON.stringify(json)},
+    data: {
+      'Content': JSON.stringify(json)
+    },
     method: 'GET',
     header: {
-      'content-type':'application/json',
+      'content-type': 'application/json',
       'cache-control': 'no-cache',
       'Access-Control-Allow-Origin': '*'
     },
     dataType: 'JSON',
-    success: function(res){
-      var a=JSON.parse(res.data)
-      var b=JSON.parse(a)
-      if(b.Status=='executing'){
-        setTimeout(function(){
+    success: function (res) {
+      var a = JSON.parse(res.data)
+      var b = JSON.parse(a)
+      if (b.Status == 'executing') {
+        setTimeout(function () {
           wxrequest(json, func)
-        },1000)
+        }, 1000)
       }
       wx.hideLoading()
       wx.setStorageSync(json.TransactionCode, b);
       func(b)
     },
-    fail:function(err){
-      if(err.errMsg.indexOf('timeout')>0){
+    fail: function (err) {
+      if (err.errMsg.indexOf('timeout') > 0) {
         wxrequest(json, func)
-      }else{
+      } else {
         wx.hideLoading()
         wx.getNetworkType({
           success: function (res3) {
-            if(res3.networkType=='none'){
+            if (res3.networkType == 'none') {
               wx.showModal({
                 title: '无网络',
                 content: '该页面信息未缓存',
-                showCancel:false
+                showCancel: false
               })
-            }else{
+            } else {
               wx.showModal({
                 title: '网络不给力',
                 content: '请重试',
-                showCancel:false
+                showCancel: false
               })
             }
           },
@@ -64,14 +66,14 @@ function wxrequest(json,func){
             wx.showModal({
               title: '无法获取当前网络状态',
               content: '请稍后重试',
-              showCancel:false
+              showCancel: false
             })
           }
         })
       }
     },
-    complete:function(allres){
-    // console.log('本次请求('+json.TransactionCode+')耗时：'+(new Date().getTime()-requestTime)/1000+'秒，状态为：'+allres.statusCode)
+    complete: function (allres) {
+      // console.log('本次请求('+json.TransactionCode+')耗时：'+(new Date().getTime()-requestTime)/1000+'秒，状态为：'+allres.statusCode)
     }
   })
 }
@@ -84,19 +86,19 @@ function getJson(action, obj, func) {
   }
 
 
-  if (action != "GetOpenID" && action != "GetUserInfo" && action != "GetMobileMessageValidateSwitch" && action !="RegisterUser"){
+  if (action != "GetOpenID" && action != "GetUserInfo" && action != "GetMobileMessageValidateSwitch" && action != "RegisterUser") {
 
     //若用户信息为空，则可能之前获取用户信息异常，重新获取用户信息
-    if (app.globalData.userInfo == null ){
+    if (app.globalData.userInfo == null) {
       getOpenId(func);
     }
-    if(app.globalData.userInfo){
+    if (app.globalData.userInfo) {
       json['f_OpenID'] = app.globalData.userInfo.f_OpenID
       json['f_UnionID'] = app.globalData.userInfo.f_UnionID
     }
   }
   json['TransactionCode'] = action
-  json['TransactionID']=guid()
+  json['TransactionID'] = guid()
   for (var key in obj) {
     json[key] = obj[key]
   }
@@ -104,44 +106,47 @@ function getJson(action, obj, func) {
 }
 //--------全局变量设置--------------
 //获取用户信息,func(返回的用户信息)
-function getOpenId(func){
+function getOpenId(func,goRegist=true) {
   const app = getApp();
   var requestTime = new Date().getTime();
   if (app.globalData.offline) {
     var info = wx.getStorageSync("GetOpenID");
     if (info != "") {
       app.globalData.openId = info.Result
-      refreshUserInfo(func);
+      refreshUserInfo(func,goRegist);
       return;
     }
-  } 
+  }
   wx.login({
     success: function (res) {
-      getJson('GetOpenID',{'WeChatCode':res.code},function(res1) {
-        if (res1.Status=='success') {
+      console.log(res);
+      getJson('GetOpenID', {
+        'WeChatCode': res.code
+      }, function (res1) {
+        if (res1.Status == 'success') {
           getApp().globalData.openId = res1.Result
-          refreshUserInfo(func)
+          refreshUserInfo(func,goRegist)
         } else {
           wx.showModal({
-            title:'获取openid失败',
-            content:res1.Result,
-            showCancel:false,
-            confirmText:'重试',
-            complete:function(){
-              getOpenId()
+            title: '获取openid失败',
+            content: res1.Result,
+            showCancel: false,
+            confirmText: '重试',
+            complete: function () {
+              getOpenId(func,goRegist)
             }
           })
         }
       })
     },
-    fail:function(err) {
+    fail: function (err) {
       // console.log(err)
       wx.showModal({
         title: '微信登录失败',
         content: '请重新登录',
-        showCancel:false,
-        confirmText:'重试',
-        complete:function(){
+        showCancel: false,
+        confirmText: '重试',
+        complete: function () {
           getOpenId()
         }
       })
@@ -149,53 +154,67 @@ function getOpenId(func){
   })
 }
 //刷新用户信息,func(返回的用户信息)
-function refreshUserInfo(func){
+function refreshUserInfo(func, goRegist = true) {  
   var app = getApp()
-  if(!app.globalData.openId){
-    getOpenId(func)
+  if (!app.globalData.openId) {
+    getOpenId(func,goRegist)
     return
   }
-  getJson('GetUserInfo', {'f_OpenID':app.globalData.openId},function(res2){
-    wx.stopPullDownRefresh()
-    if (res2.Status=='success') {
-      if (res2.User.f_OpenID == null || res2.User.f_OpenID=='') {
-        wx.navigateTo({
-          url: '/pages/register/register?type=0',
-        })
-      } else if (res2.User.f_UnionID == null || res2.User.f_UnionID == ''){
-        wx.navigateTo({
-          url: '/pages/reg2/reg2?id=' + res2.User.f_id,
-        })
+  getJson('GetUserInfo', {
+    'f_OpenID': app.globalData.openId
+  }, function (res2) {
+    wx.stopPullDownRefresh();
+
+    if (res2.Status == 'success') {
+
+      if (res2.User.f_OpenID == null || res2.User.f_OpenID == '') {
+        app.globalData.isRegisted = false;
+
+        if (goRegist) {
+          wx.navigateTo({
+            url: '/pages/register/register?type=0',
+          })
+        }
+      } else if (res2.User.f_UnionID == null || res2.User.f_UnionID == '') {
+        app.globalData.isRegisted = false;
+        if (goRegist) {
+          wx.navigateTo({
+            url: '/pages/reg2/reg2?id=' + res2.User.f_id,
+          })
+        }
       } else {
+        app.globalData.isRegisted = true;
         app.globalData.userInfo = res2.User
-        if(func)func(res2.User)
+        console.log(app.globalData)
+        if (func) func(res2.User)
       }
     } else {
       wx.showModal({
         title: '获取用户信息失败',
         content: res2.Result,
-        confirmText:'重试',
-        success:function(){
+        confirmText: '重试',
+        success: function () {
           refreshUserInfo()
         }
       })
     }
+
   })
 }
 
 
 //通用提示
-function notice(tit,cont,func) {
+function notice(tit, cont, func) {
   wx.showModal({
     title: tit,
     content: cont,
     showCancel: false,
     confirmText: "确定",
-    complete:func
+    complete: func
   })
 }
 //提示：只显示内容和确定按钮
-function showErr(err){
+function showErr(err) {
   wx.showModal({
     content: err,
     showCancel: false,
@@ -203,13 +222,13 @@ function showErr(err){
   })
 }
 //向自己的手机发送验证码
-function sendIdentify(openid,code,tel,func){
+function sendIdentify(openid, code, tel, func) {
   var json = config.telJson
-  json['Code']=code
-  json['f_OpenID']=openid
-  json['f_Tel']=tel
-  json['TransactionID']=guid()
-  wxrequest(json,func)
+  json['Code'] = code
+  json['f_OpenID'] = openid
+  json['f_Tel'] = tel
+  json['TransactionID'] = guid()
+  wxrequest(json, func)
 }
 //获取用户的小区列表
 /*function getCourts(openid,func){
@@ -218,69 +237,69 @@ function sendIdentify(openid,code,tel,func){
   wxrequest(json,func)
 }*/
 //获取用户某小区的家庭成员
-function getFamily(openid,courtid,func){
-  var json= config.getFamilyJson
-  json['f_OpenID']=openid
-  json['CourtID']=courtid
-  json['TransactionID']=guid()
-  wxrequest(json,func)
+function getFamily(openid, courtid, func) {
+  var json = config.getFamilyJson
+  json['f_OpenID'] = openid
+  json['CourtID'] = courtid
+  json['TransactionID'] = guid()
+  wxrequest(json, func)
 }
 //获取用户某小区的钥匙列表
-function getKeyList(openid,courtid,func){
-  var json=config.keylistJson
-  json['f_OpenID']=openid
-  json['CourtID']=courtid
-  json['TransactionID']=guid()
-  wxrequest(json,func)
+function getKeyList(openid, courtid, func) {
+  var json = config.keylistJson
+  json['f_OpenID'] = openid
+  json['CourtID'] = courtid
+  json['TransactionID'] = guid()
+  wxrequest(json, func)
 }
 //扫码1-在线
-function scanopendoor(openid, unionid, userid, courtid, devid, time, secret, door, func, operationCode){
-  var json=config.scanJson1
-  json['f_OpenID']=openid
-  json['f_unionID']=unionid
-  json['f_userid']=userid
-  json['CourtID']=courtid
-  json['Devid']=devid
-  json['Time']=time
-  json['Secret']=secret
-  json['InOutState']=door
+function scanopendoor(openid, unionid, userid, courtid, devid, time, secret, door, func, operationCode) {
+  var json = config.scanJson1
+  json['f_OpenID'] = openid
+  json['f_unionID'] = unionid
+  json['f_userid'] = userid
+  json['CourtID'] = courtid
+  json['Devid'] = devid
+  json['Time'] = time
+  json['Secret'] = secret
+  json['InOutState'] = door
   json["OperationCode"] = operationCode
-  json['TransactionID']=guid()
-  wxrequest(json,func)
+  json['TransactionID'] = guid()
+  wxrequest(json, func)
 }
 //扫码2-离线/显示密码
-function scanshowpassword(openid,unionid,userid,courtid,devid,time,secret,m,func){
-  var json=config.scanJson2
-  json['f_OpenID']=openid
+function scanshowpassword(openid, unionid, userid, courtid, devid, time, secret, m, func) {
+  var json = config.scanJson2
+  json['f_OpenID'] = openid
   json['f_unionID'] = unionid
-  json['f_userid']=userid
-  json['CourtID']=courtid
-  json['Devid']=devid
-  json['Time']=time
-  json['Secret']=secret
-  json['DynamicPassword']=m
-  json['TransactionID']=guid()
-  wxrequest(json,func)
+  json['f_userid'] = userid
+  json['CourtID'] = courtid
+  json['Devid'] = devid
+  json['Time'] = time
+  json['Secret'] = secret
+  json['DynamicPassword'] = m
+  json['TransactionID'] = guid()
+  wxrequest(json, func)
 }
 //扫码3-注册权限
-function applypermission(openid,unionid,userid,time,secret,courtid,func){
-  var json=config.scanJson3
+function applypermission(openid, unionid, userid, time, secret, courtid, func) {
+  var json = config.scanJson3
   json['f_OpenID'] = openid
-  json['f_UnionID']=unionid
-  json['UserID']=userid
-  json['Time']=time
-  json['Secret']=secret
-  json['CourtID']=courtid
-  json['TransactionID']=guid()
-  wxrequest(json,func)
+  json['f_UnionID'] = unionid
+  json['UserID'] = userid
+  json['Time'] = time
+  json['Secret'] = secret
+  json['CourtID'] = courtid
+  json['TransactionID'] = guid()
+  wxrequest(json, func)
 }
 //添加家庭成员
-function addFamily(openid,userid,func){
-  var json=config.addFamilyJson
-  json['f_OpenID']=openid
-  json['FamilyMemberID']=userid
-  json['TransactionID']=guid()
-  wxrequest(json,func)
+function addFamily(openid, userid, func) {
+  var json = config.addFamilyJson
+  json['f_OpenID'] = openid
+  json['FamilyMemberID'] = userid
+  json['TransactionID'] = guid()
+  wxrequest(json, func)
 }
 
 //刷新小区信息
@@ -288,63 +307,67 @@ function addFamily(openid,userid,func){
 
 //------内部js接口--------
 //时间处理
-function formatTime(date){
-  return date.getFullYear()+formatNumber(date.getMonth()+1)+formatNumber(date.getDate())+formatNumber(date.getHours())+formatNumber(date.getMinutes())+formatNumber(date.getSeconds())
+function formatTime(date) {
+  return date.getFullYear() + formatNumber(date.getMonth() + 1) + formatNumber(date.getDate()) + formatNumber(date.getHours()) + formatNumber(date.getMinutes()) + formatNumber(date.getSeconds())
 }
-function formatNumber(n){
+
+function formatNumber(n) {
   n = n.toString()
-  return n[1]?n:'0'+n
+  return n[1] ? n : '0' + n
 }
 //获取guid
-function guid(){
-  return ('xxxxxxxx-xxxx-4xxx-yxxx-'+formatTime(new Date())).replace(/[xy]/g, function (c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+function guid() {
+  return ('xxxxxxxx-xxxx-4xxx-yxxx-' + formatTime(new Date())).replace(/[xy]/g, function (c) {
+    var r = Math.random() * 16 | 0,
+      v = c == 'x' ? r : (r & 0x3 | 0x8);
     return v.toString(16);
   });
 }
 //钥匙加密
-function encode(content){
-  return (""+CryptoJS.AES.encrypt(content, config.mykey)).replace(/\n/g, "")
+function encode(content) {
+  return ("" + CryptoJS.AES.encrypt(content, config.mykey)).replace(/\n/g, "")
 }
-function decode(content){
+
+function decode(content) {
   return (CryptoJS.AES.decrypt(content, config.mykey).toString(CryptoJS.enc.Utf8))
 }
-function base64_encode(str){
-  return (""+CryptoJS.enc.Base64.stringify(str))
+
+function base64_encode(str) {
+  return ("" + CryptoJS.enc.Base64.stringify(str))
 }
-function base64_decode(str){
-  return (""+CryptoJS.enc.Base64.parse(str))
+
+function base64_decode(str) {
+  return ("" + CryptoJS.enc.Base64.parse(str))
 }
 //设置本js接口
 module.exports = {
   getJson: getJson,
 
-  getOpenId:getOpenId,
-  refreshUserInfo:refreshUserInfo,
+  getOpenId: getOpenId,
+  refreshUserInfo: refreshUserInfo,
 
-  formatTime:formatTime,
-  formatNumber:formatNumber,
-  encode:encode,
-  decode:decode,
+  formatTime: formatTime,
+  formatNumber: formatNumber,
+  encode: encode,
+  decode: decode,
   base64_encode: base64_encode,
   base64_decode: base64_decode,
 
   //wxrequest:wxrequest
-  showErr:showErr,
-  notice:notice,//通用提示
+  showErr: showErr,
+  notice: notice, //通用提示
 
   //getOpenIdByCode: getOpenIdByCode,
   //getUserByOpenId: getUserByOpenId,
   //getUserByCode: getUserByCode,
   //register:register,
-  sendIdentify:sendIdentify,
+  sendIdentify: sendIdentify,
   //getCourts: getCourts,
   getFamily: getFamily,
   getKeyList: getKeyList,
   scanopendoor: scanopendoor,
   scanshowpassword: scanshowpassword,
   applypermission: applypermission,
-  addFamily:addFamily,
+  addFamily: addFamily,
   refreshUserInfo: refreshUserInfo
 }
-

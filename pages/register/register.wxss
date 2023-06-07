@@ -50,3 +50,21 @@
 checkbox-group{
   float: left;
 }
+.nav-bar{ 
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  color: #fff;
+  height: 50px;
+  background-color: #339adc;
+  font-size: 14px;
+  padding: 0 10px;
+  position: relative;
+}
+.nav-bar-btn{
+  position: absolute;
+  left: 10px;
+}
+.nav-bar-title{
+  
+}

@@ -34,7 +34,7 @@ Page({
     var that = this
     var user = app.globalData.userInfo
     var courts = util.getJson('GetCourts', {}, function (res) {
-      if (res.Groups.length < 1) {
+      if (res.Groups && res.Groups.length < 1) {
         util.notice('加载小区失败', '小区列表为空', function () {
           wx.redirectTo({
             url: '/pages/index/index',

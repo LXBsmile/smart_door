@@ -40,7 +40,7 @@
     <image src="/images/banner.png" class="bannerImage"></image>
   </view>
   <view class="desktop">
-    <block wx:for-items="{{m1.menu}}" wx:key="item.id">
+    <block wx:for-items="{{m1.menu}}" wx:key="id">
       <view id="{{item.id}}" bindtap="clickMenu" data-online="{{item.online}}" class="navigator-menu" hover-class="view-menu">
         <image class="list-img" src="{{item.image}}"></image>
         <view class="list-text">{{item.name}}</view>
@@ -56,7 +56,7 @@
         <view class="viewalltab"><image class="icon" src='/images/home.png'></image></view>
         <view class="tabBartext">首页</view>
     </view>
-    <view class="tabBar-item" bindtap='switchtab2'>
+    <view class="tabBar-item" bindtap='switchtab2' hidden="{{!isRegisted}}" >
         <view class="viewalltab"><image class="icon" src='/images/qxm2.png'></image></view>
         <view class="tabBartext">权限码</view>
     </view>

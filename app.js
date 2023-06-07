@@ -26,8 +26,7 @@ App({
       }
     })*/
     wx.onNetworkStatusChange(function (res) {
-      _this.globalData.offline = !res.isConnected;
-      console.log(_this.globalData.offline, res.isConnected)
+      _this.globalData.offline = !res.isConnected;      
       _this.globalData.networkType = res.networkType;
     })
   },
@@ -54,6 +53,7 @@ App({
     })
   },
   globalData: {
+    isRegisted:false,//是否已经注册过
     userInfo: null,//我的账户信息
     openId:null,//我的openid
     groups: null, 

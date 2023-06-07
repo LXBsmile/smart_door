@@ -15,7 +15,8 @@
     "pages/charge/charge",
     "pages/showqr/showqr",
     "pages/reg2/reg2",
-    "pages/shareqr/shareqr"
+    "pages/shareqr/shareqr",
+    "pages/securityProtocol/securityProtocol"
   ],
   "window": {
     "navigationBarTextStyle": "white",
