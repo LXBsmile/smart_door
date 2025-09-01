@@ -13,8 +13,8 @@ Page({
     disabled2: false,
     checked3: '0',
     disabled3: true,
-    disabledProtocol:true,
-    checkProtocol:'0',
+    disabledProtocol: true,
+    checkProtocol: '0',
     regType: '0', //0是注册，1是修改
     isCode: false,
     typeName: '注册',
@@ -239,6 +239,7 @@ Page({
   getMsgStatus: function () {
     var that = this
     util.getJson('GetMobileMessageValidateSwitch', {}, function (res2) {
+      console.log('res', res2)
       if (res2.Status == 'success') {
         that.setData({
           isCode: res2.MobileMessageValidate
@@ -257,6 +258,5 @@ Page({
       wx.stopPullDownRefresh()
     })
   },
-  onUnload() {   
-  }
+  onUnload() {}
 })

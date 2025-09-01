@@ -22,8 +22,9 @@
       <text class='text11'>欢迎使用智慧云门禁</text>
       <view>
         <text class='text12'>{{tools.cryptoTelNo(tel)}}</text>
-        <view class='view121' bindtap='modifytel' hidden="{{!isRegisted}}">修改手机号码</view>
+        <!-- <view class='view121' bindtap='modifytel' hidden="{{!isRegisted}}">修改手机号码</view> -->
         <view class='view121' bindtap='modifytel' hidden="{{isRegisted}}">登录/注册</view>
+        <view class='view122' bindtap='logout' hidden="{{!isRegisted}}">退出登录</view>
       </view>
     </view>
   </view>

@@ -43,7 +43,7 @@ Page({
     }
 
     var that = this
-    if (that.data.thisuser.f_Tel != app.globalData.userInfo.f_Tel) {
+    if (that.data.thisuser.f_Tel != app.globalData.userInfo?.f_Tel) {
       if (!app.globalData.offline) {
         that.setData({
           thisuser: app.globalData.userInfo
@@ -58,8 +58,8 @@ Page({
       })
     }
   },
-  onHide: function () {},
-  onUnload: function () {},
+  onHide: function () { },
+  onUnload: function () { },
   onPullDownRefresh: function () {
     var that = this
     util.refreshUserInfo(function () {
@@ -80,10 +80,10 @@ Page({
       thisuser: app.globalData.userInfo,
       gender: app.globalData.userInfo.f_gender == '1' ? '男' : '女',
       nickname: app.globalData.userInfo.f_nickname,
-      tel: app.globalData.userInfo.f_Tel,
+      tel: app.globalData.userInfo?.f_Tel,
       userid: app.globalData.userInfo.f_id,
       name: app.globalData.userInfo.f_nickname,
-      isRegisted:app.globalData.isRegisted
+      isRegisted: app.globalData.isRegisted
     })
     //加载小区信息
     var openid = app.globalData.userInfo.f_OpenID
@@ -136,6 +136,14 @@ Page({
     const type = this.data.isRegisted ? '1' : '0';
     wx.navigateTo({
       url: `/pages/register/register?type=${type}`,
+    })
+  },
+  logout: function () {
+    app.globalData.userInfo = {}
+    this.data.isRegisted = false;
+    this.setData({
+      isRegisted: false,
+      userInfo: {}
     })
   },
   morecourts: function (e) {
@@ -255,39 +263,39 @@ Page({
 
   },
   drawQR: function (groupID, userID) {
-      var that = this
-      var date = new Date()
-      var content = 'time=' + ("00" + date.getFullYear()).substr(-2) + ("00" + (date.getMonth() + 1)).substr(-2) + ("00" + date.getDate()).substr(-2) + ("00" + date.getHours()).substr(-2) + ("00" + date.getMinutes()).substr(-2) + '&tel=' + app.globalData.userInfo.f_Tel + '&familyGroup=' + app.globalData.userInfo.f_UnionID + '&group=' + groupID + '&userid=' + userID
-      //console.log(content)
-      var url = 'http://szcjwzn.cn/open.php?type=5&content=' + util.encode(content)
-      //console.log(url)
-      QR.api.draw(url, 'mycanvas', 200, 200);
-      if (!that.data.hiddenmodal2) {
-        setTimeout(function () {
-          if (!that.data.hiddenmodal2) {
-            that.drawQR(groupID, userID)
-          }
-        }, 180000)
-      }
+    var that = this
+    var date = new Date()
+    var content = 'time=' + ("00" + date.getFullYear()).substr(-2) + ("00" + (date.getMonth() + 1)).substr(-2) + ("00" + date.getDate()).substr(-2) + ("00" + date.getHours()).substr(-2) + ("00" + date.getMinutes()).substr(-2) + '&tel=' + app.globalData.userInfo?.f_Tel + '&familyGroup=' + app.globalData.userInfo.f_UnionID + '&group=' + groupID + '&userid=' + userID
+    //console.log(content)
+    var url = 'http://szcjwzn.cn/open.php?type=5&content=' + util.encode(content)
+    //console.log(url)
+    QR.api.draw(url, 'mycanvas', 200, 200);
+    if (!that.data.hiddenmodal2) {
+      setTimeout(function () {
+        if (!that.data.hiddenmodal2) {
+          that.drawQR(groupID, userID)
+        }
+      }, 180000)
     }
-    /*,
-    openpicker:function(){
-      var that=this
-      util.getJson('GetCourts', {}, function (res) {
-        if (res.Status == 'success') {
-          if (res.Groups.length < 1) {
-            that.setData({
-              allcourts: [],
-              thiscourt: { "GroupName": "" }
-            })
-            util.notice('加载小区失败', '小区列表为空')
-            return
-          }
-          var index = that.data.groupindex
+  }
+  /*,
+  openpicker:function(){
+    var that=this
+    util.getJson('GetCourts', {}, function (res) {
+      if (res.Status == 'success') {
+        if (res.Groups.length < 1) {
           that.setData({
-            allcourts: res.Groups
-    })}})}*/
-    ,
+            allcourts: [],
+            thiscourt: { "GroupName": "" }
+          })
+          util.notice('加载小区失败', '小区列表为空')
+          return
+        }
+        var index = that.data.groupindex
+        that.setData({
+          allcourts: res.Groups
+  })}})}*/
+  ,
   switchtab1: function () {
     if (flag) {
       wx.redirectTo({

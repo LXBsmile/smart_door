@@ -1,5 +1,6 @@
 const config = require('../config')
 const CryptoJS = require('CryptoJS/aes')
+let showing = false;
 //----------通用请求---------------
 //发送请求
 function wxrequest(json, func) {
@@ -90,7 +91,26 @@ function getJson(action, obj, func) {
 
     //若用户信息为空，则可能之前获取用户信息异常，重新获取用户信息
     if (app.globalData.userInfo == null) {
-      getOpenId(func);
+      if (showing) return;
+      showing = true;
+      setTimeout(() => {
+        wx.showModal({
+          title: '未获取到数据',
+          content: '请确认管理中心悬否已为您授权请登承后再试',
+          success(res) {
+            if (res.confirm) {
+              wx.redirectTo({
+                url: '/pages/register/register?type=0',
+              })
+            }
+          },
+          complete() {
+            showing = false;
+          }
+        })
+      }, 500);
+      return;
+      // getOpenId(func);
     }
     if (app.globalData.userInfo) {
       json['f_OpenID'] = app.globalData.userInfo.f_OpenID
@@ -106,26 +126,26 @@ function getJson(action, obj, func) {
 }
 //--------全局变量设置--------------
 //获取用户信息,func(返回的用户信息)
-function getOpenId(func,goRegist=true) {
+function getOpenId(func, goRegist = true) {
   const app = getApp();
   var requestTime = new Date().getTime();
   if (app.globalData.offline) {
     var info = wx.getStorageSync("GetOpenID");
     if (info != "") {
       app.globalData.openId = info.Result
-      refreshUserInfo(func,goRegist);
+      refreshUserInfo(func, goRegist);
       return;
     }
   }
   wx.login({
     success: function (res) {
-      console.log(res);
+      console.log('login', res);
       getJson('GetOpenID', {
         'WeChatCode': res.code
       }, function (res1) {
         if (res1.Status == 'success') {
           getApp().globalData.openId = res1.Result
-          refreshUserInfo(func,goRegist)
+          refreshUserInfo(func, goRegist)
         } else {
           wx.showModal({
             title: '获取openid失败',
@@ -133,7 +153,7 @@ function getOpenId(func,goRegist=true) {
             showCancel: false,
             confirmText: '重试',
             complete: function () {
-              getOpenId(func,goRegist)
+              getOpenId(func, goRegist)
             }
           })
         }
@@ -154,10 +174,10 @@ function getOpenId(func,goRegist=true) {
   })
 }
 //刷新用户信息,func(返回的用户信息)
-function refreshUserInfo(func, goRegist = true) {  
+function refreshUserInfo(func, goRegist = true) {
   var app = getApp()
   if (!app.globalData.openId) {
-    getOpenId(func,goRegist)
+    getOpenId(func, goRegist)
     return
   }
   getJson('GetUserInfo', {
@@ -166,23 +186,42 @@ function refreshUserInfo(func, goRegist = true) {
     wx.stopPullDownRefresh();
 
     if (res2.Status == 'success') {
-
-      if (res2.User.f_OpenID == null || res2.User.f_OpenID == '') {
-        app.globalData.isRegisted = false;
-
-        if (goRegist) {
-          wx.navigateTo({
-            url: '/pages/register/register?type=0',
-          })
-        }
-      } else if (res2.User.f_UnionID == null || res2.User.f_UnionID == '') {
+      if (res2.User.f_OpenID == null || res2.User.f_OpenID == '' || res2.User.f_UnionID == null || res2.User.f_UnionID == '') {
         app.globalData.isRegisted = false;
         if (goRegist) {
-          wx.navigateTo({
-            url: '/pages/reg2/reg2?id=' + res2.User.f_id,
-          })
+          if (showing) return;
+          showing = true;
+          setTimeout(() => {
+            wx.showModal({
+              title: '提示',
+              content: '需要您登录/注册授权用户信息才能正常使用，是否立即登录/注册？',
+              success(res) {
+                if (res.confirm) {
+                  wx.redirectTo({
+                    url: '/pages/register/register?type=0',
+                  })
+                }
+              },
+              complete() {
+                showing = false;
+              }
+            })
+          }, 500);
+
+          // wx.navigateTo({
+          //   url: '/pages/toLogin/toLogin',
+          // })
         }
-      } else {
+      }
+      //  else if (res2.User.f_UnionID == null || res2.User.f_UnionID == '') {
+      //   app.globalData.isRegisted = false;
+      //   if (goRegist) {
+      //     wx.navigateTo({
+      //       url: '/pages/reg2/reg2?id=' + res2.User.f_id,
+      //     })
+      //   }
+      // } 
+      else {
         app.globalData.isRegisted = true;
         app.globalData.userInfo = res2.User
         console.log(app.globalData)
@@ -198,7 +237,6 @@ function refreshUserInfo(func, goRegist = true) {
         }
       })
     }
-
   })
 }
 

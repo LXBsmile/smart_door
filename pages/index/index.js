@@ -44,28 +44,33 @@ Page({
         })
         return;
       }
-      if (!app.globalData.isRegisted) {
-        wx.showModal({
-          title: '提示',
-          content: '需要您登录/注册授权用户信息才能正常使用，是否立即登录/注册？',
-          success(res) {
-            if (res.confirm) {
-              wx.redirectTo({
-                url: '/pages/register/register?type=0',
-              })
-            }
-          }
-        })
+      console.log(app.globalData.isRegisted)
+      if (page == 'showQR') {
+        this.getScan()
       } else {
-        if (page == 'showQR') {
-          this.getScan()
-        } else {
-
-          wx.navigateTo({
-            url: '/pages/' + page + '/' + page,
-          })
-        }
+        wx.navigateTo({
+          url: '/pages/' + page + '/' + page,
+        })
       }
+
+      // if (!app.globalData.isRegisted) {
+      //   wx.redirectTo({
+      //     url: '/pages/toLogin/toLogin',
+      //   })
+      //   // wx.showModal({
+      //   //   title: '提示',
+      //   //   content: '需要您登录/注册授权用户信息才能正常使用，是否立即登录/注册？',
+      //   //   success(res) {
+      //   //     if (res.confirm) {
+      //   //       wx.redirectTo({
+      //   //         url: '/pages/register/register?type=0',
+      //   //       })
+      //   //     }
+      //   //   }
+      //   // })
+      // } else {
+        
+      // }
     }
   },
   getScan: function () {

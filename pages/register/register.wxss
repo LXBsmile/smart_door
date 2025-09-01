@@ -65,6 +65,6 @@ checkbox-group{
   position: absolute;
   left: 10px;
 }
-.nav-bar-title{
+/* .nav-bar-title{
   
-}
+} */

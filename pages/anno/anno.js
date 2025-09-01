@@ -34,6 +34,7 @@ Page({
         })
         that.getNotice()
       } else {
+        
         util.notice('加载小区信息失败', res.Result)
       }
     })

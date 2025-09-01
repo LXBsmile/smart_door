@@ -16,7 +16,9 @@
     "pages/showqr/showqr",
     "pages/reg2/reg2",
     "pages/shareqr/shareqr",
-    "pages/securityProtocol/securityProtocol"
+    "pages/securityProtocol/securityProtocol",
+    "pages/toLogin/toLogin",
+    "pages/login/login"
   ],
   "window": {
     "navigationBarTextStyle": "white",

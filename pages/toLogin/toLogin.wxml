@@ -1,0 +1,14 @@
+<!--pages/toLogin.wxml-->
+<view class='container'>
+  <view class="content">
+    <view>
+      <text class="h3">未获取到数据！</text>
+    </view>
+    <view class="mt-80">
+      <text>该功能为内部授权用户使用
+        <br />请登录后再试
+      </text>
+    </view>
+    <button type="primary" bind:tap="login">立即登录</button>
+  </view>
+</view>

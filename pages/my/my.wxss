@@ -65,8 +65,19 @@
   padding:2.4% 4%;
   margin-left:2%;
 }
+
 .view121:active{
   background-color: #a63a16;
+}
+.view122{
+  display: inline;
+  color: white;
+  font-size: 13px;
+  vertical-align: middle;
+  background-color: #339adc;
+  border-radius: 1rem;
+  padding:2.4% 4%;
+  margin-left:2%;
 }
 .view2{
   background: white;

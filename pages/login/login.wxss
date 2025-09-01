@@ -1,0 +1,7 @@
+/* pages/login/login.wxss */
+
+.content {
+  text-align: center;
+  width: 80%;
+  margin: 300rpx auto 0;
+}

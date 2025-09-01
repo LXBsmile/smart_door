@@ -1,0 +1,15 @@
+/* pages/toLogin.wxss */
+
+.content {
+  text-align: center;
+  padding-top: 300rpx;
+}
+
+text {
+  width: 80%;
+}
+
+button {
+  margin-top: 60rpx;
+  width: 70%;
+}

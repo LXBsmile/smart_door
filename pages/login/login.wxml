@@ -1,0 +1,33 @@
+<!--pages/login/login.wxml-->
+<view class="container">
+  <view class="content">
+    <button disabled="{{protocols.length !== 2}}" type="primary" open-type="getPhoneNumber" bindgetphonenumber="gotPhoneNumber">微信授权登录
+    </button>
+    <view class="mt-20">
+      <checkbox-group bindchange='checkboxChange'>
+        <view class="flex">
+          <checkbox value="1">
+            <label>我已阅读并接受</label>
+          </checkbox>
+          <navigator class='navigator3' url='/pages/protocol/protocol'>《用户使用条款》</navigator>
+        </view>
+        <view class='flex mt-10'>
+          <checkbox value="2">
+            <label>我已阅读并接受</label>
+          </checkbox>
+          <navigator class='navigator3' url='/pages/securityProtocol/securityProtocol'>《用户隐私协议》</navigator>
+        </view>
+      </checkbox-group>
+    </view>
+    <view class="mt-40">
+      <view>
+        <text>其他登录方式</text>
+      </view>
+      <view class="mt-5">
+        <navigator class='navigator3' url='/pages/register/register'>
+          <button type="primary" size="mini">账号登录</button>
+        </navigator>
+      </view>
+    </view>
+  </view>
+</view>
