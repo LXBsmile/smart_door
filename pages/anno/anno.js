@@ -4,27 +4,23 @@ const app = getApp()
 Page({
   data: {
     annos: [],
-    thisCourtName:'',
-    thisCourtID:'',
-    courts:{},
-    disablelist:{},
-    thisTime:null,
-    index:'0'
+    thisCourtName: '',
+    thisCourtID: '',
+    courts: {},
+    disablelist: {},
+    thisTime: null,
+    index: '0'
   },
   onLoad: function (options) {
     var that = this
     var courts = util.getJson('GetCourts', {}, function (res) {
       if (res.Status == 'success') {
         if (res.Groups.length < 1) {
-          util.notice('加载小区失败', '小区列表为空', function () {
-            wx.redirectTo({
-              url: '/pages/index/index',
-            })
-          })
+          util.noticeArea('index')
           return
         }
-        if(!res.Groups[app.globalData.courtindex]){
-          app.globalData.courtindex=0
+        if (!res.Groups[app.globalData.courtindex]) {
+          app.globalData.courtindex = 0
         }
         that.setData({
           courts: res.Groups,
@@ -34,7 +30,7 @@ Page({
         })
         that.getNotice()
       } else {
-        
+
         util.notice('加载小区信息失败', res.Result)
       }
     })
@@ -43,7 +39,7 @@ Page({
   },
   onShow: function () {
     util.refreshUserInfo()
-    var that=this
+    var that = this
     that.getVisited()
   },
   onHide: function () {
@@ -51,7 +47,7 @@ Page({
   onUnload: function () {
   },
   onPullDownRefresh: function () {
-    var that=this
+    var that = this
     that.getNotice()
     wx.stopPullDownRefresh()
   },
@@ -59,14 +55,14 @@ Page({
   },
   onShareAppMessage: function () {
   },
-  getNotice:function(){//刷新本地缓存的消息
-    var that=this
+  getNotice: function () {//刷新本地缓存的消息
+    var that = this
     util.getJson('GetCourtNoticeByID', { 'CourtID': that.data.thisCourtID }, function (res2) {
       if (res2.Status == 'success') {
-        var tt=new Date().getTime()
+        var tt = new Date().getTime()
         that.setData({
           annos: res2.Notice,
-          thisTime:tt
+          thisTime: tt
         })
         that.getVisited()
       } else {
@@ -74,18 +70,18 @@ Page({
       }
     })
   },
-  setVisited:function(e){
+  setVisited: function (e) {
     //console.log(e.currentTarget.dataset.id)
     var that = this
     var list = that.data.disablelist
-    list[e.currentTarget.dataset.id]=true
+    list[e.currentTarget.dataset.id] = true
     wx.setStorage({
       key: 'disablelist',
       data: list
     })
   },
-  getVisited:function(){
-    var that=this
+  getVisited: function () {
+    var that = this
     wx.getStorage({
       key: 'disablelist',
       success: function (res2) {
@@ -101,9 +97,9 @@ Page({
     that.setData({
       thisCourtName: that.data.courts[index].GroupName,
       thisCourtID: that.data.courts[index].f_id,
-      index:index
+      index: index
     })
-    app.globalData.courtindex=index
+    app.globalData.courtindex = index
     that.getNotice()
   }
 })

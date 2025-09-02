@@ -1,5 +1,6 @@
 // pages/register/register.js
 const app = getApp()
+const { getJson } = require('../../utils/util');
 var util = require('../../utils/util')
 var fivemin
 Page({
@@ -17,7 +18,7 @@ Page({
     checkProtocol: '0',
     regType: '0', //0是注册，1是修改
     isCode: false,
-    typeName: '注册',
+    typeName: '登录',
     type: '1',
     backBtnName: '返回',
     statusBarHeight: 40,
@@ -31,12 +32,12 @@ Page({
     this.setData({
       type: options.type
     })
-    wx.setNavigationBarTitle({
-      title: options.type == '1' ? '修改' : '注册'
-    })
+    // wx.setNavigationBarTitle({
+    //   title: options.type == '1' ? '修改' : '注册'
+    // })
     this.setData({
       regType: options.type,
-      typeName: options.type == '1' ? '修改' : '注册'
+      // typeName: options.type == '1' ? '修改' : '注册'
     });
     this.setData({
       backBtnName: options.type == '1' ? '返回' : '回首页'
@@ -193,47 +194,62 @@ Page({
       util.showErr('请先阅读并同意《用户隐私协议》')
       return
     }
-    var userInfo = res.detail.userInfo
-    util.getJson('RegisterUser', {
-      'f_OpenID': app.globalData.openId,
-      'f_Tel': that.data.tel,
-      'f_gender': userInfo.gender,
-      'f_nickname': userInfo.nickName,
-      'f_headpic': userInfo.avatarUrl,
-      'f_country': userInfo.country,
-      'f_province': userInfo.province,
-      'f_city': userInfo.city,
-      'f_language': userInfo.language
-      //user['encryptedData'] = res.detail.encryptedData
-      //user['iv'] = res.detail.iv
-    }, function (res2) {
-      if (res2.Status == 'success') {
-        if (that.data.regType == '1') {
-          app.globalData.userInfo['f_Tel'] = that.data.tel
-          wx.showToast({
-            title: that.data.typeName + '成功',
-            icon: 'success',
-            duration: 2000,
-            mask: true,
-            complete: function () {
-              setTimeout(function () {
-                wx.navigateBack({
-                  delta: 1
-                })
-              }, 1500)
-            }
-          })
-        } else {
-          util.refreshUserInfo(function (user) {
-            wx.navigateTo({
-              url: '/pages/reg2/reg2?id=' + user.f_id,
+    util.getOpenIdPromise().then(openId => {
+      app.globalData.openId = openId;
+      var userInfo = res.detail.userInfo
+      util.getJson('RegisterUser', {
+        'f_OpenID': openId,
+        'f_Tel': that.data.tel,
+        'f_gender': userInfo.gender,
+        'f_nickname': userInfo.nickName,
+        'f_headpic': userInfo.avatarUrl,
+        'f_country': userInfo.country,
+        'f_province': userInfo.province,
+        'f_city': userInfo.city,
+        'f_language': userInfo.language
+        //user['encryptedData'] = res.detail.encryptedData
+        //user['iv'] = res.detail.iv
+      }, function (res2) {
+        if (res2.Status == 'success') {
+          if (that.data.regType == '1') {
+            app.globalData.userInfo['f_Tel'] = that.data.tel
+            wx.showToast({
+              title: that.data.typeName + '成功',
+              icon: 'success',
+              duration: 2000,
+              mask: true,
+              complete: function () {
+                setTimeout(function () {
+                  wx.navigateBack({
+                    delta: 1
+                  })
+                }, 1500)
+              }
             })
-          })
+          } else {
+            util.refreshUserInfo(function (user) {
+              wx.navigateTo({
+                url: '/pages/reg2/reg2?id=' + user.f_id,
+              })
+            })
+          }
+        } else {
+          // 登录行为
+          if (res2.Result.includes('手机号已注册') || res2.Result.includes('新旧号码一致')) {
+            util.getOpenId(() => {
+              wx.reLaunch({
+                url: '/pages/index/index',
+              })
+            }, true, true)
+          } else {
+            util.notice(that.data.typeName + '失败', res2.Result)
+          }
         }
-      } else {
-        util.notice(that.data.typeName + '失败', res2.Result)
-      }
+      })
     })
+
+
+
   },
   //获取 是否需要验证短信 的状态
   getMsgStatus: function () {
@@ -258,5 +274,5 @@ Page({
       wx.stopPullDownRefresh()
     })
   },
-  onUnload() {}
+  onUnload() { }
 })

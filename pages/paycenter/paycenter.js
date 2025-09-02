@@ -3,16 +3,16 @@ const app = getApp()
 const util = require('../../utils/util')
 Page({
   data: {
-    thisCourtName:'',
+    thisCourtName: '',
     courts: [],
     thisCourtID: '',
-    index:'0',
-    uerNum:'',
-    name:'',
-    group:'',
-    tel:'',
-    money:'',
-    validity:''
+    index: '0',
+    uerNum: '',
+    name: '',
+    group: '',
+    tel: '',
+    money: '',
+    validity: ''
   },
   onLoad: function (options) {
     var that = this
@@ -20,15 +20,11 @@ Page({
     util.getJson('GetCourts', {}, function (res) {
       if (res.Status == 'success') {
         if (res.Groups.length < 1) {
-          util.notice('加载小区失败', '小区列表为空', function () {
-            wx.redirectTo({
-              url: '/pages/index/index',
-            })
-          })
+          util.noticeArea('index');
           return
         }
-        if(!res.Groups[app.globalData.courtindex]){
-          app.globalData.courtindex=0
+        if (!res.Groups[app.globalData.courtindex]) {
+          app.globalData.courtindex = 0
         }
         that.setData({
           courts: res.Groups,
@@ -53,9 +49,9 @@ Page({
   },
   onPullDownRefresh: function () {
     this.getMoney()
-    setTimeout(function(){
+    setTimeout(function () {
       wx.stopPullDownRefresh()
-    },1000)
+    }, 1000)
   },
   selectcourt: function (e) {
     var index = e.detail.value
@@ -65,18 +61,18 @@ Page({
       thisCourtID: that.data.courts[index].f_id,
       index: index
     })
-    app.globalData.courtindex=index
+    app.globalData.courtindex = index
     that.getMoney()
   },
-  getMoney:function(){
-    var that=this
-    util.getJson('GetUserBalanceValidate', {CourtID:that.data.thisCourtID},function(res){
-      if(res.Status=='success'){
+  getMoney: function () {
+    var that = this
+    util.getJson('GetUserBalanceValidate', { CourtID: that.data.thisCourtID }, function (res) {
+      if (res.Status == 'success') {
         that.setData({
           uerNum: res.f_uerNum,
-          name:res.f_name,
+          name: res.f_name,
           group: res.f_group,
-          tel:res.f_tel,
+          tel: res.f_tel,
           money: res.f_money,
           validity: res.f_validity
         })
@@ -86,18 +82,18 @@ Page({
             util.notice('获取费用信息失败', res.Result)
           }
         })
-      }else{
-        util.notice('获取余额失败',res.Result)
+      } else {
+        util.notice('获取余额失败', res.Result)
       }
     })
   },
-  gotocharge:function(){
-    var that=this
+  gotocharge: function () {
+    var that = this
     wx.navigateTo({
-      url: '/pages/charge/charge?courtid='+that.data.thisCourtID+'&courtname='+that.data.thisCourtName,
+      url: '/pages/charge/charge?courtid=' + that.data.thisCourtID + '&courtname=' + that.data.thisCourtName,
     })
   },
-  gotodelay:function(){
+  gotodelay: function () {
     var that = this
     wx.navigateTo({
       url: '/pages/chargedelay/chargedelay?courtid=' + that.data.thisCourtID + '&courtname=' + that.data.thisCourtName,

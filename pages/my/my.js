@@ -96,7 +96,7 @@ Page({
               "GroupName": ""
             }
           })
-          util.notice('加载小区失败', '小区列表为空')
+          util.noticeArea();
           return
         }
         if (!res.Groups[app.globalData.courtindex]) {
@@ -139,11 +139,9 @@ Page({
     })
   },
   logout: function () {
-    app.globalData.userInfo = {}
-    this.data.isRegisted = false;
-    this.setData({
-      isRegisted: false,
-      userInfo: {}
+    app.clearData();
+    wx.reLaunch({
+      url: '/pages/index/index',
     })
   },
   morecourts: function (e) {

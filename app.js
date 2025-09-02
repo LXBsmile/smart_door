@@ -2,7 +2,7 @@ var util = require('./utils/util')
 const config = require('./config.js')
 App({
   onLaunch: function () {
-    var _this=this;
+    var _this = this;
     wx.getNetworkType({
       success: function (res3) {
         _this.globalData.offline = res3.networkType == "none";
@@ -26,7 +26,7 @@ App({
       }
     })*/
     wx.onNetworkStatusChange(function (res) {
-      _this.globalData.offline = !res.isConnected;      
+      _this.globalData.offline = !res.isConnected;
       _this.globalData.networkType = res.networkType;
     })
   },
@@ -35,34 +35,46 @@ App({
     wx.setStorage({
       key: 'store',
       data: {
-        courtindex:self.globalData.courtindex,
-        thisCourt:self.thisCourt,
-        openId:self.globalData.openId
+        courtindex: self.globalData.courtindex,
+        thisCourt: self.thisCourt,
+        openId: self.globalData.openId
       }
     })
   },
-  onShow:function(){
-    var self= this
+  onShow: function () {
+    var self = this
     wx.getStorage({
       key: 'store',
       success: function (res2) {
         self.globalData.courtindex = res2.data.courtindex,
-        self.globalData.openId=res2.data.openId,
-        self.thisCourt=res2.data.thisCourt
+          self.globalData.openId = res2.data.openId,
+          self.thisCourt = res2.data.thisCourt
       }
     })
   },
   globalData: {
-    isRegisted:false,//是否已经注册过
+    isRegisted: false,//是否已经注册过
     userInfo: null,//我的账户信息
-    openId:null,//我的openid
-    groups: null, 
-    courtindex:0,
+    openId: null,//我的openid
+    groups: null,
+    courtindex: 0,
     offline: false,
-    networkType: "4g" 
+    networkType: "4g"
   },
   getConfig() {
     return config;
   },
-  thisCourt:{}
+  clearData() {
+    this.globalData = {
+      isRegisted: false,//是否已经注册过
+      userInfo: null,//我的账户信息
+      openId: null,//我的openid
+      groups: null,
+      courtindex: 0,
+      offline: false,
+      networkType: "4g"
+    }
+    wx.clearStorageSync();
+  },
+  thisCourt: {}
 })

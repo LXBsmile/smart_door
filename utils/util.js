@@ -78,6 +78,33 @@ function wxrequest(json, func) {
     }
   })
 }
+
+function showLogin() {
+  setTimeout(() => {
+    if (showing) return;
+    showing = true;
+    wx.showModal({
+      title: '未获取到数据',
+      content: '请确认管理中心是否已为您授权\n请登录后再试',
+      cancelText: '暂不登录',
+      confirmText: '立即登录',
+      success(res) {
+        showing = false;
+        if (res.confirm) {
+          wx.redirectTo({
+            url: '/pages/register/register?type=0',
+          })
+        }
+      },
+      fail() {
+        showing = false;
+      },
+      complete() {
+        showing = false;
+      }
+    })
+  }, 500);
+}
 //通用访问函数
 function getJson(action, obj, func) {
   var app = getApp()
@@ -88,34 +115,17 @@ function getJson(action, obj, func) {
 
 
   if (action != "GetOpenID" && action != "GetUserInfo" && action != "GetMobileMessageValidateSwitch" && action != "RegisterUser") {
+    if (!app.globalData.openId) {
+      return showLogin();
+    }
 
     //若用户信息为空，则可能之前获取用户信息异常，重新获取用户信息
-    if (app.globalData.userInfo == null) {
-      if (showing) return;
-      showing = true;
-      setTimeout(() => {
-        wx.showModal({
-          title: '未获取到数据',
-          content: '请确认管理中心悬否已为您授权请登承后再试',
-          success(res) {
-            if (res.confirm) {
-              wx.redirectTo({
-                url: '/pages/register/register?type=0',
-              })
-            }
-          },
-          complete() {
-            showing = false;
-          }
-        })
-      }, 500);
-      return;
-      // getOpenId(func);
-    }
-    if (app.globalData.userInfo) {
-      json['f_OpenID'] = app.globalData.userInfo.f_OpenID
-      json['f_UnionID'] = app.globalData.userInfo.f_UnionID
-    }
+    // if (app.globalData.userInfo == null) {
+    //   // return showLogin()
+    //   return getOpenId(func);
+    // }
+    json['f_OpenID'] = obj.f_OpenID || app.globalData.userInfo.f_OpenID
+    json['f_UnionID'] = obj.f_UnionID || app.globalData.userInfo.f_UnionID
   }
   json['TransactionCode'] = action
   json['TransactionID'] = guid()
@@ -124,16 +134,54 @@ function getJson(action, obj, func) {
   }
   wxrequest(json, func)
 }
+function getOpenIdPromise() {
+  const app = getApp();
+  const openId = app.globalData.openId;
+
+  return new Promise((resolve, reject) => {
+    if (openId) resolve(openId);
+    wx.login({
+      success: function (res) {
+        console.log('login', res);
+        getJson('GetOpenID', {
+          'WeChatCode': res.code
+        }, r => {
+          console.log('openId', r)
+          resolve(r.Result)
+        })
+      },
+      fail: function (err) {
+        console.error('err', err)
+        wx.showModal({
+          title: '微信登录失败',
+          content: '请重新登录',
+          showCancel: false,
+          confirmText: '重试',
+          complete: function () {
+            getOpenId()
+          }
+        })
+      }
+    })
+  })
+}
+function getUserInfo(openId) {
+  return new Promise((resolve, reject) => {
+    getJson('GetUserInfo', {
+      'f_OpenID': openId
+    }, resolve)
+  })
+}
 //--------全局变量设置--------------
 //获取用户信息,func(返回的用户信息)
-function getOpenId(func, goRegist = true) {
+function getOpenId(func, goRegist = true, refresh = true) {
   const app = getApp();
   var requestTime = new Date().getTime();
   if (app.globalData.offline) {
     var info = wx.getStorageSync("GetOpenID");
     if (info != "") {
       app.globalData.openId = info.Result
-      refreshUserInfo(func, goRegist);
+      refresh && refreshUserInfo(func, goRegist);
       return;
     }
   }
@@ -145,7 +193,14 @@ function getOpenId(func, goRegist = true) {
       }, function (res1) {
         if (res1.Status == 'success') {
           getApp().globalData.openId = res1.Result
-          refreshUserInfo(func, goRegist)
+          wx.setStorage({
+            key: 'store',
+            data: {
+              courtindex: 0,
+              openId: res1.Result
+            }
+          })
+          refresh && refreshUserInfo(func, goRegist)
         } else {
           wx.showModal({
             title: '获取openid失败',
@@ -177,8 +232,9 @@ function getOpenId(func, goRegist = true) {
 function refreshUserInfo(func, goRegist = true) {
   var app = getApp()
   if (!app.globalData.openId) {
-    getOpenId(func, goRegist)
+    // getOpenId(func, goRegist)
     return
+
   }
   getJson('GetUserInfo', {
     'f_OpenID': app.globalData.openId
@@ -186,41 +242,24 @@ function refreshUserInfo(func, goRegist = true) {
     wx.stopPullDownRefresh();
 
     if (res2.Status == 'success') {
-      if (res2.User.f_OpenID == null || res2.User.f_OpenID == '' || res2.User.f_UnionID == null || res2.User.f_UnionID == '') {
+      if (res2.User.f_OpenID == null || res2.User.f_OpenID == '') {
         app.globalData.isRegisted = false;
         if (goRegist) {
-          if (showing) return;
-          showing = true;
-          setTimeout(() => {
-            wx.showModal({
-              title: '提示',
-              content: '需要您登录/注册授权用户信息才能正常使用，是否立即登录/注册？',
-              success(res) {
-                if (res.confirm) {
-                  wx.redirectTo({
-                    url: '/pages/register/register?type=0',
-                  })
-                }
-              },
-              complete() {
-                showing = false;
-              }
-            })
-          }, 500);
+          showLogin()
 
           // wx.navigateTo({
           //   url: '/pages/toLogin/toLogin',
           // })
         }
       }
-      //  else if (res2.User.f_UnionID == null || res2.User.f_UnionID == '') {
-      //   app.globalData.isRegisted = false;
-      //   if (goRegist) {
-      //     wx.navigateTo({
-      //       url: '/pages/reg2/reg2?id=' + res2.User.f_id,
-      //     })
-      //   }
-      // } 
+      else if (res2.User.f_UnionID == null || res2.User.f_UnionID == '') {
+        app.globalData.isRegisted = false;
+        if (goRegist) {
+          wx.navigateTo({
+            url: '/pages/reg2/reg2?id=' + res2.User.f_id,
+          })
+        }
+      }
       else {
         app.globalData.isRegisted = true;
         app.globalData.userInfo = res2.User
@@ -240,7 +279,14 @@ function refreshUserInfo(func, goRegist = true) {
   })
 }
 
-
+function noticeArea(target) {
+  notice('加载小区失败', '小区列表为空\n请等待管理中心授权!', function () {
+    // target &&
+    //   wx.redirectTo({
+    //     url: `/pages/${target}/${target}`,
+    //   })
+  })
+}
 //通用提示
 function notice(tit, cont, func) {
   wx.showModal({
@@ -380,6 +426,8 @@ function base64_decode(str) {
 //设置本js接口
 module.exports = {
   getJson: getJson,
+  getOpenIdPromise,
+  getUserInfo,
 
   getOpenId: getOpenId,
   refreshUserInfo: refreshUserInfo,
@@ -394,6 +442,7 @@ module.exports = {
   //wxrequest:wxrequest
   showErr: showErr,
   notice: notice, //通用提示
+  noticeArea,
 
   //getOpenIdByCode: getOpenIdByCode,
   //getUserByOpenId: getUserByOpenId,

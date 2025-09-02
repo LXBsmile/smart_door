@@ -3,23 +3,23 @@ const app = getApp()
 const util = require('../../utils/util')
 Page({
   data: {
-    unit:'未知',
-    tel:'未知',
-    address:'未知',
-    email:'未知',
-    web:'未知',
-    introduce:'未知',
+    unit: '未知',
+    tel: '未知',
+    address: '未知',
+    email: '未知',
+    web: '未知',
+    introduce: '未知',
     courts: [],
     thisCourtName: '',
     thisCourtID: '',
     groupindex: 0,
-    index:'0'
+    index: '0'
   },
   onShow: function () {
     util.refreshUserInfo()
   },
   onReady: function (options) {
-    var that=this
+    var that = this
     that.setData({
       groupindex: app.globalData.courtindex,
       index: app.globalData.courtindex
@@ -37,23 +37,19 @@ Page({
   },
   onShareAppMessage: function () {
   },
-  getMyInfo:function(){
+  getMyInfo: function () {
     var that = this
     var user = app.globalData.userInfo
     var courts = util.getJson('GetCourts', {}, function (res) {
       if (res.Status == 'success') {
         if (res.Groups.length < 1) {
-          util.notice('加载小区失败', '小区列表为空', function () {
-            wx.redirectTo({
-              url: '/pages/index/index',
-            })
-          })
+          util.noticeArea('index')
           return
         }
-        if(!res.Groups[app.globalData.courtindex]){
-          app.globalData.courtindex=0
+        if (!res.Groups[app.globalData.courtindex]) {
+          app.globalData.courtindex = 0
         }
-        var index=that.data.groupindex
+        var index = that.data.groupindex
         that.setData({
           courts: res.Groups,
           thisCourtName: res.Groups[index].GroupName,
@@ -85,10 +81,10 @@ Page({
     that.setData({
       thisCourtName: that.data.courts[index].GroupName,
       thisCourtID: that.data.courts[index].f_id,
-      groupindex:index,
-      index:index
+      groupindex: index,
+      index: index
     })
-    app.globalData.courtindex=index//记忆小区
+    app.globalData.courtindex = index//记忆小区
     util.getJson('GetCourtByID', { 'CourtID': that.data.thisCourtID }, function (res) {
       if (res.Status == 'success') {
         that.setData({
@@ -104,10 +100,10 @@ Page({
       }
     })
   },
-  getcourts:function(){
+  getcourts: function () {
     return
     this.setData({
-      courts:[{"f_id":"19","GroupName":"AAA示范小区"},{"f_id":"29","GroupName":"AAA示范2小区"}]
+      courts: [{ "f_id": "19", "GroupName": "AAA示范小区" }, { "f_id": "29", "GroupName": "AAA示范2小区" }]
     })
   }
 })

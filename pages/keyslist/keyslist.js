@@ -9,18 +9,14 @@ Page({
     thisCourtID: '',
     index: '0'
   },
-  onShow: function() {
+  onShow: function () {
     util.refreshUserInfo()
     var that = this
     var user = app.globalData.userInfo
-    var courts = util.getJson('GetCourts', {}, function(res) {
+    var courts = util.getJson('GetCourts', {}, function (res) {
       if (res.Status == 'success') {
         if (res.Groups.length < 1) {
-          util.notice('加载小区失败', '小区列表为空', function() {
-            wx.redirectTo({
-              url: '/pages/index/index',
-            })
-          })
+          util.noticeArea('index')
           return
         }
         if (!res.Groups[app.globalData.courtindex]) {
@@ -40,10 +36,10 @@ Page({
     })
 
   },
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
     this.getKeyList()
   },
-  selectcourt: function(e) {
+  selectcourt: function (e) {
     var index = e.detail.value
     var that = this
     that.setData({
@@ -53,7 +49,7 @@ Page({
     app.globalData.courtindex = index
     util.getJson('KeyList', {
       'CourtID': that.data.courts[index].f_id
-    }, function(res2) {
+    }, function (res2) {
       if (res2.Status == 'success') {
         that.setData({
           keys: res2.Keys
@@ -64,7 +60,7 @@ Page({
     })
 
   },
-  unlock: function(e) {
+  unlock: function (e) {
     var that = this
     if (app.globalData.offline) {
       wx.showModal({
@@ -77,7 +73,7 @@ Page({
       "Devid": e.target.id,
       "CourtID": this.data.thisCourtID,
       OperationCode: 'PRE-DEDUCT'
-    }, function(res) {
+    }, function (res) {
       if (res.Status == 'success') {
         if (res.Code == 'SHOWDEDUCTTIP') {
           wx.showModal({
@@ -89,7 +85,7 @@ Page({
                   "Devid": e.target.id,
                   "CourtID": that.data.thisCourtID,
                   OperationCode: ''
-                }, function(res3) {
+                }, function (res3) {
                   if (res3.Status == 'success') {
                     wx.showToast({
                       title: '开门成功',
@@ -101,11 +97,11 @@ Page({
                   }
                 })
               } else {
-            
+
               }
             }
           })
-        }else{
+        } else {
           wx.showToast({
             title: '开门成功',
             mask: true,
@@ -118,11 +114,11 @@ Page({
       }
     })
   },
-  getKeyList: function() {
+  getKeyList: function () {
     var that = this
     util.getJson('KeyList', {
       'CourtID': that.data.thisCourtID
-    }, function(res2) {
+    }, function (res2) {
       if (res2.Status == 'success') {
         that.setData({
           keys: res2.Keys
