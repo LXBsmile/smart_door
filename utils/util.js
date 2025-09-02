@@ -124,8 +124,8 @@ function getJson(action, obj, func) {
     //   // return showLogin()
     //   return getOpenId(func);
     // }
-    json['f_OpenID'] = obj.f_OpenID || app.globalData.userInfo.f_OpenID
-    json['f_UnionID'] = obj.f_UnionID || app.globalData.userInfo.f_UnionID
+    json['f_OpenID'] = obj?.f_OpenID || app.globalData.userInfo.f_OpenID
+    json['f_UnionID'] = obj?.f_UnionID || app.globalData.userInfo.f_UnionID
   }
   json['TransactionCode'] = action
   json['TransactionID'] = guid()

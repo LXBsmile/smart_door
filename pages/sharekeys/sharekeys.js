@@ -151,6 +151,9 @@ Page({
             }, 1500)
           }
         })
+      },
+      fail: function (e) {
+        console.error(e)
       }
     })
   },
