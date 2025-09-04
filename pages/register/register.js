@@ -133,7 +133,7 @@ Page({
         }
       })
     } else {
-      util.showErr('请输入正确的手机号码')
+      util.showErr('请输入正确的账号')
     }
   },
   //勾选协议
@@ -174,7 +174,7 @@ Page({
       return
     }
     if ((!/^1\d{10}$/.test(that.data.tel))) {
-      util.showErr('请输入正确的手机号码')
+      util.showErr('请输入正确的账号')
       return
     }
     if (that.data.isCode && !(/^\d{6}$/.test(that.data.code))) {

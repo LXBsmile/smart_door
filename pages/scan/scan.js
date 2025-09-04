@@ -10,26 +10,26 @@ Page({
     goneFlag: false,
     count: 0
   },
-  onReady: function() {
+  onReady: function () {
     var that = this
-    setTimeout(function() {
+    setTimeout(function () {
       that.getScan()
     }, 50)
   },
-  onPullDownRefresh: function() {
+  onPullDownRefresh: function () {
     this.getScan()
     wx.stopPullDownRefresh()
   },
-  onTabItemTap: function() {
+  onTabItemTap: function () {
     wx.hideTabBar()
     var that = this
     if (showScan) {
-      setTimeout(function() {
+      setTimeout(function () {
         that.getScan()
       }, 50)
     }
   },
-  getScan: function() {
+  getScan: function () {
     var that = this
     showScan = true
     if (!app.globalData.userInfo) {
@@ -40,7 +40,7 @@ Page({
     }
     wx.scanCode({
       onlyFromCamera: false,
-      success: function(res) {
+      success: function (res) {
         //console.log('Scan...success')
         var parameter = res.result.split("?")
         if (parameter[0] != 'http://szcjwzn.cn/open.php' || parameter.length != 2) {
@@ -59,7 +59,8 @@ Page({
           that.gotoIndex('请重新尝试', '程序错误：' + err.message)
         }
         if (p.type == '1') {
-          util.scanopendoor(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.door, function(res) {
+          const uf = app.globalData.userInfo || {}
+          util.scanopendoor(uf.f_OpenID, uf.f_UnionID, uf.f_id, p.Court, p.devid, p.time, p.secret, p.door, function (res) {
             if (res.Status == 'success') {
               if (res.Code == 'SHOWDEDUCTTIP') {
                 wx.showModal({
@@ -67,7 +68,7 @@ Page({
                   content: `本次需要扣费${res.Deduction}元，确认是否执行?`,
                   success(res2) {
                     if (res2.confirm) {
-                      util.scanopendoor(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.door, function(res3) {
+                      util.scanopendoor(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.door, function (res3) {
                         if (res3.Status == 'success') {
                           that.gotoIndex('权限验证成功', '如果有疑问请联系小区管理员')
                         } else {
@@ -75,7 +76,7 @@ Page({
                         }
                       }, "");
                     } else {
-                     
+
                     }
                   }
                 })
@@ -87,7 +88,7 @@ Page({
             }
           }, "PRE-DEDUCT")
         } else if (p.type == '2') {
-          util.scanshowpassword(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.m, function(res) {
+          util.scanshowpassword(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.m, function (res) {
             if (res.Status == 'success') {
               that.setData({
                 password: res.Result,
@@ -98,7 +99,7 @@ Page({
             }
           })
         } else if (p.type == '3') {
-          util.applypermission(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, p.userid, p.time, p.secret, p.data, function(res) {
+          util.applypermission(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, p.userid, p.time, p.secret, p.data, function (res) {
             if (res.Status == 'success') {
               that.gotoIndex('扫码成功', '请等待授权！')
             } else {
@@ -111,7 +112,7 @@ Page({
           that.gotoIndex('无效的类型', '解析二维码信息失败')
         }
       },
-      fail: function(err) {
+      fail: function (err) {
         wx.showTabBar()
         //console.log('Scan...fail')
         showScan = true
@@ -123,23 +124,23 @@ Page({
         })
         //that.gotoIndex('请重新尝试','扫码失败')//不知道为啥，用this调用不到
       },
-      complete: function() {
+      complete: function () {
         //console.log('Scan...complete')
       }
     })
   },
-  scanCode: function() {
+  scanCode: function () {
     var that = this
     wx.scanCode({
-      success: function(res) {
+      success: function (res) {
         that.setData({
           result: res.result
         })
       },
-      fail: function(res) {}
+      fail: function (res) { }
     })
   },
-  gotoIndex: function(title, content) { //显示弹窗确认后返回首页
+  gotoIndex: function (title, content) { //显示弹窗确认后返回首页
     wx.showTabBar()
     var that = this
     wx.showModal({
@@ -147,7 +148,7 @@ Page({
       content: content,
       showCancel: false,
       confirmText: "确定",
-      complete: function() {
+      complete: function () {
         showScan = true
         that.setData({
           goneFlag: true
@@ -158,7 +159,7 @@ Page({
       }
     })
   },
-  confirm: function() {
+  confirm: function () {
     var that = this
     showScan = true
     that.setData({

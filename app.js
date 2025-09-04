@@ -7,7 +7,8 @@ App({
       success: function (res3) {
         _this.globalData.offline = res3.networkType == "none";
       }
-    });//初始化网络状态 
+    });
+    //初始化网络状态 
     /*wx.getSetting({
       success(res) {
         if (!res.authSetting['scope.userInfo']) {
@@ -43,14 +44,10 @@ App({
   },
   onShow: function () {
     var self = this
-    wx.getStorage({
-      key: 'store',
-      success: function (res2) {
-        self.globalData.courtindex = res2.data.courtindex,
-          self.globalData.openId = res2.data.openId,
-          self.thisCourt = res2.data.thisCourt
-      }
-    })
+    const res2 = wx.getStorageSync('store');
+    self.globalData.courtindex = res2.courtindex;
+    self.globalData.openId = res2.openId;
+    self.thisCourt = res2.thisCourt;
   },
   globalData: {
     isRegisted: false,//是否已经注册过

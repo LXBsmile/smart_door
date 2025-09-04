@@ -13,7 +13,7 @@ Page({
     util.refreshUserInfo()
     var that = this
     var user = app.globalData.userInfo
-    var courts = util.getJson('GetCourts', {}, function (res) {
+    util.getJson('GetCourts', {}, function (res) {
       if (res.Status == 'success') {
         if (res.Groups.length < 1) {
           util.noticeArea('index')

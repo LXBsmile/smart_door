@@ -124,8 +124,10 @@ function getJson(action, obj, func) {
     //   // return showLogin()
     //   return getOpenId(func);
     // }
-    json['f_OpenID'] = obj?.f_OpenID || app.globalData.userInfo.f_OpenID
-    json['f_UnionID'] = obj?.f_UnionID || app.globalData.userInfo.f_UnionID
+    const uf = app.globalData.userInfo || {}
+
+    json['f_OpenID'] = obj?.f_OpenID || uf.f_OpenID
+    json['f_UnionID'] = obj?.f_UnionID || uf.f_UnionID
   }
   json['TransactionCode'] = action
   json['TransactionID'] = guid()
@@ -234,7 +236,6 @@ function refreshUserInfo(func, goRegist = true) {
   if (!app.globalData.openId) {
     // getOpenId(func, goRegist)
     return
-
   }
   getJson('GetUserInfo', {
     'f_OpenID': app.globalData.openId

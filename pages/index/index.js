@@ -9,7 +9,6 @@ Page({
     isRegisted: false
   },
   onShow: function () {
-
   },
   onReady: function () {
     setTimeout(function () {
@@ -29,7 +28,7 @@ Page({
     app.globalData.userInfo = null
     util.refreshUserInfo()
   },
-  onShareAppMessage: function (obj) {},
+  onShareAppMessage: function (obj) { },
   clickMenu: function (e) {
     if (flag) {
       flag = false
@@ -69,7 +68,7 @@ Page({
       //   //   }
       //   // })
       // } else {
-        
+
       // }
     }
   },
@@ -95,16 +94,18 @@ Page({
           util.notice('请重新尝试', '程序错误：' + err.message)
           return
         }
+        const uf = app.globalData.userInfo || {}
         if (p.type == '1') {
-          util.scanopendoor(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.door, function (res) {
+          util.scanopendoor(uf.f_OpenID, uf.f_UnionID, uf.f_id, p.Court, p.devid, p.time, p.secret, p.door, function (res) {
             if (res.Status == 'success') {
               if (res.Code == 'SHOWDEDUCTTIP') {
                 wx.showModal({
                   title: `提示`,
                   content: `本次需要扣费${res.Deduction}元，确认是否执行?`,
                   success(res2) {
+                    const uf = app.globalData.userInfo || {}
                     if (res2.confirm) {
-                      util.scanopendoor(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.door, function (res3) {
+                      util.scanopendoor(uf.f_OpenID, uf.f_UnionID, uf.f_id, p.Court, p.devid, p.time, p.secret, p.door, function (res3) {
                         if (res3.Status == 'success') {
                           util.notice('权限验证成功', '如果有疑问请联系小区管理员')
                         } else {
@@ -124,7 +125,8 @@ Page({
             }
           }, "PRE-DEDUCT")
         } else if (p.type == '2') {
-          util.scanshowpassword(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, app.globalData.userInfo.f_id, p.Court, p.devid, p.time, p.secret, p.m, function (res) {
+          const uf = app.globalData.userInfo || {}
+          util.scanshowpassword(uf.f_OpenID, uf.f_UnionID, uf.f_id, p.Court, p.devid, p.time, p.secret, p.m, function (res) {
             if (res.Status == 'success') {
 
               that.setData({
@@ -136,7 +138,9 @@ Page({
             }
           })
         } else if (p.type == '3') {
-          util.applypermission(app.globalData.userInfo.f_OpenID, app.globalData.userInfo.f_UnionID, p.userid, p.time, p.secret, p.data, function (res) {
+          const uf = app.globalData.userInfo || {}
+
+          util.applypermission(uf.f_OpenID, uf.f_UnionID, p.userid, p.time, p.secret, p.data, function (res) {
             if (res.Status == 'success') {
               util.notice('扫码成功', '请等待授权！')
             } else {

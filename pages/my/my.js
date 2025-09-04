@@ -86,7 +86,7 @@ Page({
       isRegisted: app.globalData.isRegisted
     })
     //加载小区信息
-    var openid = app.globalData.userInfo.f_OpenID
+    var openid = app.globalData.userInfo?.f_OpenID
     util.getJson('GetCourts', {}, function (res) {
       if (res.Status == 'success') {
         if (res.Groups.length < 1) {
@@ -153,7 +153,7 @@ Page({
       index: index
     })
     app.globalData.courtindex = index; //增加小区记忆
-    var openid = app.globalData.userInfo.f_OpenID
+    var openid = app.globalData.userInfo?.f_OpenID
     util.getJson('GetFamilyMembers', {
       'CourtID': that.data.thiscourt.f_id
     }, function (res) {

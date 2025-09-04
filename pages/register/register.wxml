@@ -6,7 +6,7 @@
   </view> -->
   <view class='view1'>
     <view class='view11'>
-      <input class='input1' maxlength='11' type='number' auto-focus placeholder='请输入手机号码' bindinput='setTel' value='{{tel}}'></input>
+      <input class='input1' maxlength='11' type='number' auto-focus placeholder='请输入账号' bindinput='setTel' value='{{tel}}'></input>
     </view>
   </view>
   <view class='view2' hidden='{{!isCode}}'>
@@ -32,6 +32,11 @@
       </checkbox>
     </checkbox-group>
     <navigator class='navigator3' url='/pages/securityProtocol/securityProtocol'>《用户隐私协议》</navigator>
+  </view>
+  <view class="tip">
+    <view>提示：</view>
+    <view>1、请确认有安装使用相关的设备！</view>
+    <view>2、若登录后您没有权限，请联系管理中心授权！</view>
   </view>
   <view class='view4'>
     <button type='primary' class='button4' open-type="getUserInfo" disabled='{{disabled3||disabledProtocol}}' bindgetuserinfo="registerUser">{{typeName}}</button>
