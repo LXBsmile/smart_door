@@ -38,7 +38,7 @@
     "disableSWC": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.32.1",
+  "libVersion": "3.9.3",
   "appid": "wx56140bbf83feceb4",
   "projectname": "miniapp2",
   "simulatorType": "wechat",
