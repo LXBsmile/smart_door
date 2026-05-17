@@ -1,0 +1,35 @@
+<view class='container va-page'>
+  <image class='img_bg' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
+  <!-- <courtpicker courtName='{{courtname}}' showPicker='{{false}}'></courtpicker> -->
+
+  <view class='panel form-panel'>
+    <view class='field'>
+      <image class='field-icon' src='/images/fxys_fk.png' mode='aspectFit'></image>
+      <input class='field-input' maxlength='10' placeholder='输入访客姓名' bindinput='inputname' value='{{name}}'></input>
+    </view>
+    <view class='field'>
+      <image class='field-icon' src='/images/fxys_sj.png' mode='aspectFit'></image>
+      <input class='field-input' maxlength='11' type='number' placeholder='输入手机号' bindinput='inputtel' value='{{tel}}'></input>
+    </view>
+    <view class='field field-time'>
+      <image class='field-icon' src='/images/fxys_rq.png' mode='aspectFit'></image>
+      <picker mode='date' value='{{date}}' end='{{maxDate}}' bindchange='changeDate'>
+        <view class='picker-text date-text'>{{date}}</view>
+      </picker>
+      <picker mode='time' value='{{time}}' bindchange='changeTime'>
+        <view class='picker-text'>{{time}}</view>
+      </picker>
+    </view>
+    <view class='field'>
+      <image class='field-icon' src='/images/fxys_cs.png' mode='aspectFit'></image>
+      <input class='field-input' maxlength='2' type='number' placeholder='输入使用次数' bindinput='inputcounts' value='{{counts}}'></input>
+      <text class='suffix'>次</text>
+    </view>
+    <view class='field field-select' bindtap='gotoSelectDevice'>
+      <image class='field-icon' src='/images/home_fxys.png' mode='aspectFit'></image>
+      <view class='field-input field-select-text {{deviceNames?"":"placeholder"}}'>{{deviceDisplayText}}</view>
+      <view class='field-arrow'></view>
+    </view>
+    <button type='primary' class='submit-btn' bindtap='submit'>提交申请</button>
+  </view>
+</view>

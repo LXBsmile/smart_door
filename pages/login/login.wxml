@@ -1,32 +1,88 @@
 <!--pages/login/login.wxml-->
-<view class="container">
+<view class="container login-page">
+  <view class="loginGlow loginGlowTop"></view>
+  <view class="loginGlow loginGlowBottom"></view>
+
   <view class="content">
-    <button disabled="{{protocols.length !== 2}}" type="primary" open-type="getPhoneNumber" bindgetphonenumber="gotPhoneNumber">微信授权登录
-    </button>
-    <view class="mt-20">
-      <checkbox-group bindchange='checkboxChange'>
-        <view class="flex">
-          <checkbox value="1">
-            <label>我已阅读并接受</label>
-          </checkbox>
-          <navigator class='navigator3' url='/pages/protocol/protocol'>《用户使用条款》</navigator>
-        </view>
-        <view class='flex mt-10'>
-          <checkbox value="2">
-            <label>我已阅读并接受</label>
-          </checkbox>
-          <navigator class='navigator3' url='/pages/securityProtocol/securityProtocol'>《用户隐私协议》</navigator>
-        </view>
-      </checkbox-group>
-    </view>
-    <view class="mt-40">
-      <view>
-        <text>其他登录方式</text>
+    <view class="brandBlock">
+      <view class="brandLogoWrap">
+        <image class="avatar" src="/images/header.png" mode="aspectFit"></image>
       </view>
-      <view class="mt-5">
-        <navigator class='navigator3' url='/pages/register/register'>
-          <button type="primary" size="mini">账号登录</button>
+      <view class="brandTitle">智慧云门禁</view>
+      <view class="brandDesc">快捷授权手机号，快速同步门禁权限与访客能力</view>
+    </view>
+
+    <view class="loginCard">
+      <view class="cardEyebrow">WELCOME</view>
+      <view class="cardTitle">请选择登录方式</view>
+      <view class="cardDesc">{{cardDesc}}</view>
+
+      <view wx:if="{{directLoginAvailable && maskedPhone}}" class="phonePreview">
+        <view class="phonePreviewLabel">当前登录号码</view>
+        <view class="phonePreviewValue">{{maskedPhone}}</view>
+        <view class="phonePreviewDesc">确认使用该手机号同步门禁权限。</view>
+      </view>
+
+      <block wx:if="{{directLoginAvailable}}">
+        <button class="authBtn" type="primary" bindtap="handleDirectLogin">{{primaryButtonText}}</button>
+        <!--
+        <button wx:if="{{protocols.length === 1}}" class="otherPhoneBtn" open-type="getPhoneNumber" bindgetphonenumber="gotPhoneNumber">其他号码</button>
+        <button wx:else class="otherPhoneBtn" bindtap="showOtherPhoneProtocolConfirm">其他号码</button>
+        -->
+      </block>
+      <block wx:else>
+        <button wx:if="{{protocols.length === 1}}" class="authBtn" type="primary" open-type="getPhoneNumber" bindgetphonenumber="gotPhoneNumber">{{primaryButtonText}}</button>
+        <button wx:else class="authBtn" type="primary" bindtap="showProtocolConfirm">{{primaryButtonText}}</button>
+      </block>
+
+      <view class="protocolWrap">
+        <checkbox-group bindchange="checkboxChange">
+          <label class="protocolRow">
+            <checkbox class="protocolCheckbox" value="1" checked="{{protocols.length === 1}}"></checkbox>
+            <view class="protocolText">
+              <text class="protocolPlain">我已阅读并同意</text>
+              <navigator class="protocolLink" url="/pages/protocol/protocol">《用户使用条款》</navigator>
+              <view class="protocolInlineGroup">
+                <text class="protocolPlain">和</text>
+                <navigator class="protocolLink" url="/pages/securityProtocol/securityProtocol">《用户隐私协议》</navigator>
+              </view>
+            </view>
+          </label>
+        </checkbox-group>
+      </view>
+
+      <view wx:if="{{false}}">
+      <!-- <view> -->
+        <view class="divider">
+          <!-- <view wx:if="{{false}}" class="divider"> -->
+          <text class="dividerText">其他登录方式</text>
+        </view>
+
+        <navigator class="accountEntry" url="/pages/register/register?type=0">
+          <view class="accountBtn">账号登录</view>
         </navigator>
+      </view>
+    </view>
+
+    <view class="tipCard">
+      <view class="tipTitle">登录提示</view>
+      <view class="tipItem">请确认已安装并使用相关门禁设备。</view>
+      <view class="tipItem">登录后若暂无权限，请联系管理中心授权。</view>
+    </view>
+  </view>
+
+  <view wx:if="{{showProtocolConfirm}}" class="protocolConfirmMask" catchtouchmove="noop">
+    <view class="protocolConfirmDialog">
+      <view class="protocolConfirmTitle">用户协议和隐私政策</view>
+      <view class="protocolConfirmContent">
+        请先阅读并同意
+        <navigator class="protocolConfirmLink" url="/pages/protocol/protocol">《用户使用条款》</navigator>
+        和
+        <navigator class="protocolConfirmLink" url="/pages/securityProtocol/securityProtocol">《用户隐私协议》</navigator>
+        ，并勾选后继续{{protocolActionText}}。
+      </view>
+      <view class="protocolConfirmActions">
+        <button class="protocolConfirmBtn protocolConfirmOk" bindtap="closeProtocolConfirm">确定</button>
       </view>
     </view>
   </view>

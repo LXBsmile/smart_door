@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "帮助中心",
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "courtpicker": "/components/courtpicker/courtpicker"
+  }
 }

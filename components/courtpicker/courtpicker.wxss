@@ -1,1 +1,21 @@
-/* components/courtpicker/courtpicker.wxss */
+.head{
+  min-height:2rem;
+  display: flex;
+  align-items: center;
+  box-sizing:border-box;
+}
+.court_name{
+  display:flex;
+  align-items:center;
+  min-width: 0;
+  max-width: 100%;
+}
+.court_main{
+  color:#233547;
+  font-size:1rem;
+  font-weight:600;
+  line-height:1.4;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}

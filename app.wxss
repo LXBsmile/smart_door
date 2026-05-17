@@ -221,6 +221,9 @@ button[disabled][type=primary] {
   width: 100%;
   position: fixed;
   bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 9rpx;
   margin-left: -4rpx;
   background: #339adc;
@@ -234,8 +237,8 @@ button[disabled][type=primary] {
 }
 
 .tabBar-item {
-  float: left;
-  width: 33.3333%;
+  flex: 1;
+  width: auto;
   text-align: center;
   overflow: hidden;
 }

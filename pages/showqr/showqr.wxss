@@ -1,18 +1,17 @@
 /* pages/showqr/showqr.wxss */
+.page-content {
+  margin: 1rem;
+  background-color: #fff;
+  border-radius: 0.45rem;
+  overflow: hidden;
+  box-shadow:0 0.25rem 0.8rem rgba(0,0,0,0.06);
+}
+
 .img_bg{
   position: fixed;
   z-index: -1;
   width:100%;
   height: 100%;
-}
-.yellow{
-  height:0.2rem;
-  background-color: #febb17;
-  margin-top: 4%;
-  margin-right: 4%;
-  margin-left:4%;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
 }
 .head{
   margin-right: 4%;
@@ -45,15 +44,28 @@
 .court12:active{
   background-color: #b2830f
 }
+.qr-section{
+  padding:1.35rem 0 2rem;
+}
+
 .canvas-box{
   display: flex;
   justify-content: center;
   align-items: center;
   width:100%;
-
+  min-height:260px;
+  text-align:center;
 }
+
+.qr-tip{
+  text-align:center;
+  font-size:1rem;
+  color:#4e5968;
+  padding:0 1rem;
+}
+
 .nopermit{
-  height:50%;
+  height: 20rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -62,5 +74,5 @@
 .shareqr{
   width:40%;
   text-align:center;
-  margin-top:1.5rem;  
+  margin:1.5rem auto 0;
 }

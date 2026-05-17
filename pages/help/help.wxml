@@ -1,13 +1,4 @@
 <view class='contain'>
-<view class='white'></view>
-<view class='yellow'></view>
-  <view class='head'>
-    <image class='img_court' src='/images/bzzx_xq.png'></image>
-    <view class='court_name'>{{thisCourtName}}</view>
-    <picker bindchange='selectcourt' value="{{index}}" range="{{courts}}" range-key='GroupName'>
-      <view class='court12' >切换小区</view>
-    </picker>
-  </view>
   <view class='body'>
   <view class='body1'>
   <view class='view1'>

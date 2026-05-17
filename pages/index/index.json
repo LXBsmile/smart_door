@@ -1,4 +1,6 @@
 {
     "navigationBarTitleText": "智慧云门禁",
-    "enablePullDownRefresh": false
+    "navigationStyle": "custom",
+    "enablePullDownRefresh": false,
+    "usingComponents": {}
 }

@@ -1,0 +1,17 @@
+<view class='container'>
+  <view class="page-content">
+    <view class='qr-section' hidden='{{hideCanvas}}'>
+      <view class="canvas-box">
+        <canvas style="width:{{qr_width}}px;height:{{qr_height}}px;" canvas-id="mycanvas" bindlongtap="showQR" />
+      </view>
+      <button wx:if="{{show && canVisitorManage}}" type='primary' class="btn-create" bindtap="gotoVisitorManage">访客二维码</button>
+    </view>
+    <view class='nopermit' hidden='{{!hideCanvas||debugOpen}}'>抱歉，您没有权限!</view>
+    <view class='guide'>
+      <view class='guide-item'>1、出示本二维码，由10CM以上距离慢慢靠近摄像头。</view>
+      <view class='guide-item'>2、本二维码程序需配合我司专用二维码读头使用。</view>
+      <view class='guide-item'>3、二维码为动态显示，复制、截屏、转发无效。</view>
+      <view class='guide-item'>4、可设置访客二维码，截屏或转发给来访人员使用，并可限制其时间。</view>
+    </view>
+  </view>
+</view>

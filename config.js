@@ -4,6 +4,7 @@
 
 //var host = "http://ftp9876543.w165.mc-test.com"
 var host = "https://www.szcjwzn.cn"
+// var host = "https://www.szcjwzn.cn:444"
 var config = {
   host,
   myUrl: `${host}/AjaxWCF.svc/DoWork`,
@@ -64,6 +65,14 @@ var config = {
     "f_OpenID": "",
     "TransactionCode": "GetCourts",
     "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323"
+  },
+  getBackEndUserInfoJson: {
+    "Format": "WeChat_SmallApp",
+    "f_OpenID": "",
+    "f_UnionID": "",
+    "TransactionCode": "GetBackEndUserInfo",
+    "TransactionID": "31b05701-60ef-405c-87ba-af47049e3f48-20180123142323",
+    "CourtID": ""
   },
   getFamilyJson: {
     "Format": "WeChat_SmallApp",
@@ -141,6 +150,12 @@ var config = {
     "CourtID": ""
   },
   APP_CONFIG: {
+    PHONE_CONVERSION_FACTOR: ['A1', 'B2', 'C3', 'D4', 'E5'],
+    FUNC_P: 'A101',
+    FUNC_P_C: 'A102',
+    RETAIN_P: '00',
+    VALI_NUM: 'C8',
+    INTERVAL_TIME: 150,
     QR_WIDTH: 200, //二维码宽
     QR_HEIGHT: 200 //二维码高
   },

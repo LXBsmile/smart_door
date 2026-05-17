@@ -19,12 +19,9 @@ Page({
     firstIn:true
   },
   onShow: function () {
-    
-    util.refreshUserInfo();
     if (!this.data.firstIn){
       this.generateQR();
     }
-    
   },
   onLoad:function(option){
     var that=this;

@@ -1,58 +1,51 @@
-<view class="container">
-<image class='img1' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
-  <view class='yellow'></view>
-  <view class='head'>
-    <image class='img_court' src='/images/bzzx_xq.png'></image>
-    <view class='court_name'>{{thisCourtName}}</view>
-    <picker bindchange='selectcourt' value="{{index}}" range="{{courts}}" range-key='GroupName'>
-      <view class='court12'>切换小区</view>
-    </picker>
-  </view>
-    <form class='form1' catchsubmit="formSubmit" catchreset="formReset">
-      <view class="input-view">
-        <image class='headimg' src='/images/fxys_fk.png' mode='aspectFit'></image>
-        <input class="input-text" bindinput='inputname' name="name" maxlength="10" placeholder="输入访客姓名" />
-      </view>
-      <view class="input-view">
-        <image class='headimg' src='/images/fxys_sj.png' mode='aspectFit'></image>
-        <input class="input-text" name="tel" bindinput='inputtel' maxlength="11" type="number" placeholder="输入手机号码" />
-      </view>
-      <view class="input-view">
-        <image class='headimg' src='/images/fxys_rq.png' mode='aspectFit'></image>
-        <!--<text class="input-key">选择使用期限</text>-->
-         <!--<input class="input-text" name='date' bindinput='bindDateChange' placeholder='请输入使用期限，如2018050122' type='number'/>-->
-         <view class="section">
-          <picker mode="date" fields='year' value="{{inputYear}}" start="{{startYear}}" end="{{endYear}}" bindchange="bindYearChange" disabled='{{dateDis}}'>
-            <view class="picker">{{inputYear}} 年</view>
-          </picker>
-        </view>
-        <view class="section">
-          <picker value="{{monthIndex}}"  bindchange="bindMonthChange" range='{{monthArray}}' disabled='{{dateDis}}'>
-            <view class="picker">{{monthArray[monthIndex]}} 月</view>
-          </picker>
-        </view>
-        <view class="section">
-          <picker value="{{dayIndex}}" bindchange="bindDayChange" range='{{dayArray}}' disabled='{{dateDis}}'>
-            <view class="picker">{{dayArray[dayIndex]}} 日</view>
-          </picker>
-        </view>
-        <view class="section">
-          <picker bindchange="bindTimeChange" value="{{timeIndex}}" range="{{timeArray}}" disabled='{{dateDis}}'>
-            <view class="picker">{{timeArray[timeIndex]}} 时</view>
-          </picker>
-        </view>
-        <!--view class='picker-view'>
-        <picker name='time' mode="time" value="{{time}}" start="00:00" end="23:59" bindchange="bindTimeChange">
-          <view class="weui-input">{{time}}</view>
+<view class="container sk-page">
+  <image class='img_bg' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
+  <!-- <courtpicker courtName='{{thisCourtName}}' courts='{{courts}}' index='{{index}}' showPicker='{{false}}' bindchange='selectcourt'></courtpicker> -->
+
+  <form class='panel form-panel' catchsubmit='formSubmit'>
+    <view class='device-box' wx:if='{{shareDeviceName}}'>当前分享设备：{{shareDeviceName}}</view>
+    <view class='tip-box'>分享链接会自动复制到剪贴板，发送给使用人即可绑定。</view>
+
+    <view class='field'>
+      <image class='field-icon' src='/images/fxys_fk.png' mode='aspectFit'></image>
+      <input class='field-input' name='name' maxlength='10' placeholder='输入访客姓名' bindinput='inputname' value='{{name}}'></input>
+    </view>
+
+    <view class='field'>
+      <image class='field-icon' src='/images/fxys_sj.png' mode='aspectFit'></image>
+      <input class='field-input' name='tel' maxlength='11' type='number' placeholder='输入手机号码' bindinput='inputtel' value='{{tel}}'></input>
+    </view>
+
+    <view class='field field-time'>
+      <image class='field-icon' src='/images/fxys_rq.png' mode='aspectFit'></image>
+      <view class='section'>
+        <picker mode='date' fields='year' value='{{inputYear}}' start='{{startYear}}' end='{{endYear}}' bindchange='bindYearChange' disabled='{{dateDis}}'>
+          <view class='picker-text'>{{inputYear}} 年</view>
         </picker>
-        </view-->
       </view>
-      <view class="input-view">
-      <image class='headimg' src='/images/fxys_cs.png' mode='aspectFit'></image>
-        <input class="input-text" name="counts" bindinput='inputcounts' maxlength="2" type="number" placeholder="输入使用次数" value='{{counts}}'/><text style="color:#989898;">次</text>
+      <view class='section'>
+        <picker value='{{monthIndex}}' bindchange='bindMonthChange' range='{{monthArray}}' disabled='{{dateDis}}'>
+          <view class='picker-text'>{{monthArray[monthIndex]}} 月</view>
+        </picker>
       </view>
-      <view class="btn-area">
-        <button type="primary" formType="submit" disabled='{{disabled}}'>立即分享</button>
+      <view class='section'>
+        <picker value='{{dayIndex}}' bindchange='bindDayChange' range='{{dayArray}}' disabled='{{dateDis}}'>
+          <view class='picker-text'>{{dayArray[dayIndex]}} 日</view>
+        </picker>
       </view>
-    </form>
+      <view class='section'>
+        <picker bindchange='bindTimeChange' value='{{timeIndex}}' range='{{timeArray}}' disabled='{{dateDis}}'>
+          <view class='picker-text'>{{timeArray[timeIndex]}} 时</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class='field'>
+      <image class='field-icon' src='/images/fxys_cs.png' mode='aspectFit'></image>
+      <input class='field-input' name='counts' maxlength='2' type='number' placeholder='输入使用次数' bindinput='inputcounts' value='{{counts}}'></input>
+      <text class='suffix'>次</text>
+    </view>
+
+    <button type='primary' class='submit-btn' formType='submit' disabled='{{disabled}}'>立即分享</button>
+  </form>
 </view>

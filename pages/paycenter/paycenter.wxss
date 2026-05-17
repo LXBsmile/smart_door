@@ -2,11 +2,6 @@
 .container{
   background-color: #efefef;
 }
-.yellow{
-  height:0.2rem;
-  background-color: #febb17;
-  margin-top:2%;
-}
 .head{
   height: fit-content;
   display: flex;
@@ -117,6 +112,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.singleAction{
+  width:100%;
 }
 .view_courts:active{
   background-color:#a9a7a7;

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "申请临时密码",
+  "usingComponents": {
+    "courtpicker": "/components/courtpicker/courtpicker"
+  }
+}

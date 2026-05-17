@@ -1,0 +1,187 @@
+.vp-page{
+  min-height:100vh;
+  box-sizing:border-box;
+  padding:1rem;
+  background:#f5f8fb;
+}
+
+.img_bg{
+  position:fixed;
+  z-index:-1;
+  width:100%;
+  height:100%;
+  left:0;
+  top:0;
+}
+
+.pass-card,
+.guide-card{
+  border:1px solid #e4edf5;
+  border-radius:0.62rem;
+  background:rgba(255,255,255,0.96);
+  box-shadow:0 0.22rem 0.78rem rgba(47,92,130,0.1);
+  box-sizing:border-box;
+}
+
+.pass-card{
+  padding:0.92rem 0.88rem 1rem;
+}
+
+.pass-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.64rem;
+}
+
+.pass-title{
+  flex:1;
+  min-width:0;
+  color:#223144;
+  font-size:1.08rem;
+  font-weight:600;
+  line-height:1.35;
+}
+
+.pass-subtitle{
+  margin-top:0.2rem;
+  color:#7a8796;
+  font-size:0.78rem;
+  line-height:1.45;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.status-badge{
+  flex-shrink:0;
+  min-width:3.1rem;
+  padding:0.2rem 0.42rem;
+  border-radius:999px;
+  text-align:center;
+  font-size:0.72rem;
+  line-height:1.2;
+  box-sizing:border-box;
+  color:#d33d3d;
+  background:#fff0f0;
+}
+
+.status-badge.status_done{
+  color:#179a55;
+  background:#e9f8f0;
+}
+
+.status-badge.status_pending{
+  color:#d33d3d;
+  background:#fff0f0;
+}
+
+.canvas-box{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  margin-top:1rem;
+}
+
+.qr-frame{
+  padding:0.52rem;
+  border:1px solid #e5edf4;
+  border-radius:0.42rem;
+  background:#fff;
+  box-shadow:inset 0 0 0 1px rgba(51,154,220,0.03);
+}
+
+.pwd-section{
+  margin-top:0.9rem;
+  text-align:center;
+}
+
+.pwd-title{
+  color:#6f7a87;
+  font-size:0.78rem;
+}
+
+.pwd-box{
+  width:58%;
+  min-height:2.04rem;
+  margin:0.32rem auto 0;
+  border:1px solid #cfe1ef;
+  border-radius:0.28rem;
+  background:#f8fbfe;
+  text-align:center;
+  font-size:1.48rem;
+  line-height:2.04rem;
+  color:#223144;
+  font-weight:600;
+  letter-spacing:0;
+  box-sizing:border-box;
+}
+
+.info-list{
+  margin-top:0.92rem;
+  padding-top:0.66rem;
+  border-top:1px solid #edf2f6;
+}
+
+.info-row{
+  display:flex;
+  align-items:flex-start;
+  margin-top:0.32rem;
+  line-height:1.45;
+}
+
+.info-label{
+  width:4.2rem;
+  flex-shrink:0;
+  color:#8b98a6;
+  font-size:0.78rem;
+}
+
+.info-value{
+  flex:1;
+  min-width:0;
+  color:#3f4d5d;
+  font-size:0.8rem;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.guide-card{
+  margin-top:0.82rem;
+  padding:0.82rem 0.88rem 0.9rem;
+}
+
+.guide-title{
+  color:#223144;
+  font-size:0.9rem;
+  font-weight:600;
+  margin-bottom:0.42rem;
+}
+
+.guide-item{
+  color:#cc3c88;
+  font-size:0.76rem;
+  line-height:1.62;
+  margin-top:0.16rem;
+}
+
+.empty-pass{
+  margin-top:1rem;
+  padding:1.5rem 0;
+  text-align:center;
+  color:#8b98a6;
+  font-size:0.84rem;
+  border:1px solid #e4edf5;
+  border-radius:0.62rem;
+  background:#fff;
+}
+
+.preview-canvas{
+  position:fixed;
+  left:-9999px;
+  top:-9999px;
+  width:320px;
+  height:640px;
+}

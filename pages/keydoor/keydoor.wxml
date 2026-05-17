@@ -1,0 +1,18 @@
+<view class='container'>
+  <view class='panel'>
+    <view class='settingPanel'>
+      <view class='settingLabel'>{{devName}}</view>
+      <view class='radioGroup'>
+        <view class='radioBtn {{!openMode?"checked":""}}' bindtap='setOpenMode' data-value='false'>
+          <view class='radioIcon {{!openMode?"checked":""}}'></view>
+          <text class='radioText'>开启控制</text>
+        </view>
+        <view class='radioBtn {{openMode?"checked":""}}' bindtap='setOpenMode' data-value='true'>
+          <view class='radioIcon {{openMode?"checked":""}}'></view>
+          <text class='radioText'>常开模式</text>
+        </view>
+      </view>
+    </view>
+    <view class='bottomBtn' bindtap='submit'>确认执行</view>
+  </view>
+</view>

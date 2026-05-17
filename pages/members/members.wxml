@@ -1,0 +1,50 @@
+<view class='container'>
+  <view class='overlay' hidden='{{hiddenmodal}}'>
+    <view class='dialog'>
+      <view class='dialogTitle'>添加家庭成员</view>
+      <input class='dialogInput' type='text' maxlength='11' placeholder='请输入手机号' bindinput='setMemberID' value='{{inputedID}}' />
+      <view class='dialogActions'>
+        <view class='dialogBtn ghost' bindtap='cancel'>取消</view>
+        <view class='dialogBtn primary' bindtap='confirm'>确认</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='overlay' hidden='{{hiddenmodal2}}'>
+    <view class='dialog qrDialog'>
+      <view class='dialogTitle'>该用户未注册，请通过扫码添加</view>
+      <view class="canvas-box">
+        <canvas style="width:200px;height:200px;" canvas-id="mycanvas" />
+      </view>
+      <view class='dialogActions single'>
+        <view class='dialogBtn primary' bindtap='complete2'>完成</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='contentCard'>
+    <!-- <courtpicker courtName='{{thiscourt.GroupName}}' courts='{{allcourts}}' index='{{index}}' showPicker='{{false}}' bindchange='morecourts'></courtpicker> -->
+
+    <view class='sectionHeader'>
+      <view class='sectionTitle'>成员管理</view>
+      <block wx:if='{{isMain&&members.length<4}}'>
+        <view class='addMemberIcon' bindtap='addmem'>
+          <image class='img321' src='/images/me_icon_add.png'></image>
+        </view>
+      </block>
+    </view>
+    <view class='memberList'>
+      <block wx:for-items="{{members}}" wx:key="item.f_userid">
+        <view class='memberRow'>
+          <image class='img421' mode='scaleToFill' src='{{item.f_headpic}}'></image>
+          <view class='memberInfo'>
+            <view class='text422'>{{item.f_nickname}}</view>
+            <view class='text4221'>{{item.f_Tel}}</view>
+          </view>
+          <text class='text4232' hidden='{{!isMain}}' data-id='{{item.f_UnionID}}' data-it='{{item.f_nickname}}' bindtap='deleteit'>删除</text>
+        </view>
+      </block>
+      <view class='emptyMember' hidden='{{members.length>0}}'>暂无成员</view>
+    </view>
+  </view>
+</view>

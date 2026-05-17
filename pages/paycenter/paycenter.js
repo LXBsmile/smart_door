@@ -1,6 +1,7 @@
 // pages/paycenter/paycenter.js
 const app = getApp()
 const util = require('../../utils/util')
+const appService = require('../../utils/services/appService')
 Page({
   data: {
     thisCourtName: '',
@@ -12,36 +13,33 @@ Page({
     group: '',
     tel: '',
     money: '',
-    validity: ''
+    validity: '',
+    showBalance: false,
+    showRecharge: false,
+    showDelay: false
   },
   onLoad: function (options) {
     var that = this
-    var user = app.globalData.userInfo
-    util.getJson('GetCourts', {}, function (res) {
-      if (res.Status == 'success') {
-        if (res.Groups.length < 1) {
-          util.noticeArea('index');
-          return
-        }
-        if (!res.Groups[app.globalData.courtindex]) {
-          app.globalData.courtindex = 0
-        }
-        that.setData({
-          courts: res.Groups,
-          thisCourtName: res.Groups[app.globalData.courtindex].GroupName,
-          thisCourtID: res.Groups[app.globalData.courtindex].f_id,
-          index: app.globalData.courtindex
-        })
-        that.getMoney()
-      } else {
-        util.notice('加载小区信息失败', res.Result)
+    util.ensureCourtState(function (stored) {
+      if (!stored.currentCourt) {
+        util.noticeArea('index')
+        return
       }
+      that.setData({
+        courts: stored.groups,
+        thisCourtName: stored.currentCourt.GroupName,
+        thisCourtID: stored.currentCourt.f_id,
+        index: stored.index
+      })
+      that.getMoney()
     })
   },
   onReady: function () {
   },
   onShow: function () {
-    util.refreshUserInfo()
+    if (!util.getStoredUserInfo()) {
+      util.refreshUserInfo()
+    }
   },
   onHide: function () {
   },
@@ -61,11 +59,39 @@ Page({
       thisCourtID: that.data.courts[index].f_id,
       index: index
     })
-    app.globalData.courtindex = index
+    if (typeof app.setCurrentCourt === 'function') {
+      app.setCurrentCourt(that.data.courts[index], Number(index))
+    } else {
+      app.globalData.courtindex = index
+      app.thisCourt = that.data.courts[index]
+    }
     that.getMoney()
   },
   getMoney: function () {
     var that = this
+    const targetCourtId = String(that.data.thisCourtID || '').trim()
+    const applyPageConfig = function () {
+      const config = appService.getMyPageConfig(targetCourtId)
+      that.setData({
+        showBalance: !!config.showBalance,
+        showRecharge: !!config.showRecharge,
+        showDelay: !!config.showDelay
+      })
+    }
+    applyPageConfig()
+    util.requestCourtConfigurationInfo(targetCourtId, function () {
+      if (String(that.data.thisCourtID || '') !== targetCourtId) return
+      applyPageConfig()
+    }, {
+      showError: true
+    })
+    util.refreshBackEndUserInfo(function (res) {
+      if (String(that.data.thisCourtID || '') !== String(res && res.CourtID || that.data.thisCourtID || '')) return
+      applyPageConfig()
+    }, {
+      courtId: that.data.thisCourtID,
+      showError: true
+    })
     util.getJson('GetUserBalanceValidate', { CourtID: that.data.thisCourtID }, function (res) {
       if (res.Status == 'success') {
         that.setData({
@@ -88,12 +114,14 @@ Page({
     })
   },
   gotocharge: function () {
+    if (!this.data.showRecharge) return
     var that = this
     wx.navigateTo({
       url: '/pages/charge/charge?courtid=' + that.data.thisCourtID + '&courtname=' + that.data.thisCourtName,
     })
   },
   gotodelay: function () {
+    if (!this.data.showDelay) return
     var that = this
     wx.navigateTo({
       url: '/pages/chargedelay/chargedelay?courtid=' + that.data.thisCourtID + '&courtname=' + that.data.thisCourtName,

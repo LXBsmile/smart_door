@@ -1,80 +1,89 @@
-.img1{
-  position: fixed;
-  z-index: -1;
+.sk-page{
+  background:#f5f7fb;
+}
+
+.img_bg{
+  position:fixed;
+  z-index:-1;
   width:100%;
-  height: 100%;
+  height:100%;
 }
-.yellow{
-  height:0.2rem;
-  background-color: #febb17;
-  margin-top: 4.3%;
-  margin-right: 4%;
-  margin-left:4%;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
+
+.panel{
+  margin:1rem 4% 0;
+  background:#fff;
+  box-shadow:0 0.25rem 0.8rem rgba(0,0,0,0.06);
+  border-radius:0.45rem;
+  overflow:hidden;
 }
-.head{
-  margin-right: 4%;
-  margin-left:4%;
-  height:3rem;
-  background-color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-bottom: solid 1px #ebebeb;
+
+.form-panel{
+  padding:0.4rem 0 1rem;
 }
-.court12{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 4%;
-  width:5rem;
-  height: 2rem;
-  background-color: #ffbc16;
-  color: white;
-  border-top-left-radius:1rem; 
-  border-bottom-left-radius: 1rem;
-  text-align: center;
-  font-size: 0.9rem;
+
+.device-box{
+  margin:0.2rem 10% 0.4rem;
+  padding:0.55rem 0.7rem;
+  background:#f5fbff;
+  color:#339adc;
+  border-radius:0.35rem;
+  font-size:0.82rem;
+  line-height:1.5;
 }
-.court12:active{
-  background-color: #b2830f
+
+.tip-box{
+  margin:0 10% 0.5rem;
+  color:#999;
+  font-size:0.8rem;
+  line-height:1.6;
 }
-.form1{
-  margin-top: 1%;
-}
-.input-view{
-  margin:5% 10%;
-  border-bottom: solid 1px #77b8e8;
-  height: 1.5rem;
-  display: flex;
+
+.field{
+  margin:0.9rem 10%;
+  border-bottom:1px solid #77b8e8;
+  min-height:1.9rem;
+  display:flex;
   align-items:center;
 }
-.headimg{
-  height: 1rem;
+
+.field-time{
+  align-items:flex-start;
+  flex-wrap:wrap;
+  padding:0.45rem 0;
+}
+
+.field-icon{
   width:1rem;
-  float: left;
-  margin: 0;
+  height:1rem;
+  flex-shrink:0;
 }
-.input-text{
-  border:none;
-  width:95%;
-  padding-left: 5%;
+
+.field-time .field-icon{
+  margin-top:0.2rem;
 }
-.input-key{
-  padding-left: 5%;
-  width:38%;
-  color:#818181;
+
+.field-input{
+  flex:1;
+  min-width:0;
+  padding-left:0.5rem;
 }
-.picker-view{
-  padding-left: 5%;
-  float:left;
-  margin-right: 6%;
-}
-.btn-area{
-  margin:100rpx;
-}
+
 .section{
-  margin-left:4%;
+  margin-left:0.45rem;
+  margin-bottom:0.25rem;
   width:fit-content;
+}
+
+.picker-text{
+  color:#666;
+  white-space:nowrap;
+  padding-right:0.5rem;
+}
+
+.suffix{
+  color:#999;
+}
+
+.submit-btn{
+  margin:0 12%;
 }

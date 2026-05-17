@@ -1,0 +1,273 @@
+.img_bg{
+  position: fixed;
+  z-index: -1;
+  width:100%;
+  height: 100%;
+}
+
+.key_list {
+  margin: 1rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  height: calc(100vh - 2rem);
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.tools{
+  background:#fff;
+  padding:0.76rem 0.8rem 0.78rem;
+  border-bottom:1px solid #edf2f7;
+  flex-shrink:0;
+}
+
+.filter{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:0.66rem;
+  padding:0.14rem;
+  background:#f3f6fa;
+  border-radius:0.44rem;
+}
+
+.visitorFilter{
+  background:#fff;
+  border:1px solid #dbe5ef;
+}
+
+.tag{
+  width:32%;
+  min-width:0;
+  text-align:center;
+  border:none;
+  border-radius:0.34rem;
+  padding:0;
+  line-height:1.95rem;
+  background:transparent;
+  color:#6d7886;
+  font-size:0.82rem;
+  font-weight:500;
+  box-sizing:border-box;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.tag_on{
+  background:linear-gradient(180deg, #50b2f4 0%, #339adc 100%);
+  color:#fff;
+  box-shadow:0 0.18rem 0.38rem rgba(51,154,220,0.24);
+}
+
+.searchRow{
+  display:flex;
+  align-items:center;
+  padding:0.14rem;
+  background:#f8fafc;
+  border:1px solid #dbe5ef;
+  border-radius:0.44rem;
+  box-sizing:border-box;
+}
+
+.searchInput{
+  flex:1;
+  min-width:0;
+  height:1.9rem;
+  border:none;
+  background:transparent;
+  padding:0 0.62rem;
+  color:#384454;
+  font-size:0.82rem;
+}
+
+.searchBtn{
+  margin-left:0.2rem;
+  min-width:3.55rem;
+  background:linear-gradient(180deg, #50b2f4 0%, #339adc 100%);
+  color:#fff;
+  padding:0 0.82rem;
+  height:1.86rem;
+  border-radius:0.34rem;
+  box-shadow:0 0.16rem 0.36rem rgba(51,154,220,0.22);
+  font-size:0.8rem;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  flex-shrink:0;
+  white-space:nowrap;
+}
+
+.view_keylist{
+  overflow-y:auto;
+  flex:1;
+  min-height:0;
+  background:#fff;
+}
+
+.view_content{
+  display:flex;
+  min-height:3.4rem;
+  justify-content:space-between;
+  align-items:center;
+  padding:0.9rem 1rem;
+  border-bottom:1px solid #e9e9e9;
+}
+
+.leftBox{
+  flex:1;
+  min-width:0;
+}
+
+.view_name{
+  color:#333;
+  font-size:1rem;
+  line-height:1.3;
+}
+
+.view_type{
+  color:#999;
+  font-size:0.75rem;
+  margin-top:0.18rem;
+  line-height:1.3;
+}
+
+.rightBox{
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+}
+
+.img_lock{
+  width:2.6rem;
+  height:2.6rem;
+  display:block;
+  flex-shrink:0;
+}
+.img_lock_disabled{
+  opacity:0.55;
+}
+
+.empty-tip{
+  text-align:center;
+  color:#999;
+  padding:1.8rem 0;
+  font-size:0.82rem;
+}
+
+.visitorCardList{
+  padding:0.76rem;
+  box-sizing:border-box;
+}
+
+.visitorCard{
+  margin-bottom:0.72rem;
+  padding:0.78rem 0.82rem 0.74rem;
+  border:1px solid #e5edf4;
+  border-radius:0.46rem;
+  background:#fff;
+  box-shadow:0 0.18rem 0.62rem rgba(47,92,130,0.08);
+  box-sizing:border-box;
+}
+
+.visitorCard:active{
+  background:#f8fbfe;
+}
+
+.visitorCardHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.56rem;
+}
+
+.visitorApplicant{
+  flex:1;
+  min-width:0;
+  color:#263545;
+  font-size:0.98rem;
+  font-weight:600;
+  line-height:1.35;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.statusBadge{
+  flex-shrink:0;
+  min-width:3.1rem;
+  padding:0.2rem 0.42rem;
+  border-radius:999px;
+  text-align:center;
+  font-size:0.72rem;
+  line-height:1.2;
+  box-sizing:border-box;
+}
+
+.statusBadge.status_done{
+  color:#179a55;
+  background:#e9f8f0;
+}
+
+.statusBadge.status_pending{
+  color:#d33d3d;
+  background:#fff0f0;
+}
+
+.visitorMeta{
+  margin-top:0.58rem;
+}
+
+.visitorMetaRow{
+  display:flex;
+  align-items:flex-start;
+  margin-top:0.26rem;
+  line-height:1.45;
+}
+
+.visitorMetaLabel{
+  width:4.2rem;
+  flex-shrink:0;
+  color:#8b98a6;
+  font-size:0.76rem;
+}
+
+.visitorMetaValue{
+  flex:1;
+  min-width:0;
+  color:#4a5868;
+  font-size:0.78rem;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.visitorCardFoot{
+  margin-top:0.68rem;
+  padding-top:0.58rem;
+  border-top:1px solid #edf2f6;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.62rem;
+}
+
+.visitorDevices{
+  flex:1;
+  min-width:0;
+  color:#6d7886;
+  font-size:0.76rem;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.visitorOpenText{
+  flex-shrink:0;
+  color:#339adc;
+  font-size:0.78rem;
+  font-weight:600;
+}

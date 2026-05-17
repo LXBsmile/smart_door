@@ -1,44 +1,88 @@
 <!--pages/register/register.wxml-->
-<view class='container'>
-  <!-- <view class="nav-bar" style="padding-top: {{statusBarHeight }}px;">
-    <text bindtap="handleNavBack" class="nav-bar-btn">{{'< ' + backBtnName}}</text> 
-    <text class="nav-bar-title">{{typeName}}</text>
-  </view> -->
-  <view class='view1'>
-    <view class='view11'>
-      <input class='input1' maxlength='11' type='number' auto-focus placeholder='请输入账号' bindinput='setTel' value='{{tel}}'></input>
+<view class="container register-page">
+  <view class="loginGlow loginGlowTop"></view>
+  <view class="loginGlow loginGlowBottom"></view>
+
+  <view class="content">
+    <view class="brandBlock">
+      <view class="brandLogoWrap">
+        <image class="avatar" src="/images/header.png" mode="aspectFit"></image>
+      </view>
+      <view class="brandTitle">智慧云门禁</view>
+      <view class="brandDesc">输入手机号，完成账号登录并同步门禁权限</view>
     </view>
-  </view>
-  <view class='view2' hidden='{{!isCode}}'>
-    <view class='view21'>
-      <input class='input2' maxlength='6' type='number' bindinput='setCode' placeholder='验证码' value='{{code}}'></input>
+
+    <view class="loginCard">
+      <view class="cardEyebrow">ACCOUNT</view>
+      <view class="cardTitle">账号登录</view>
+      <view class="cardDesc">请填写手机号{{isCode ? "和验证码" : ""}}，并勾选协议后继续。</view>
+
+      <view class="formField">
+        <input
+          class="formInput"
+          maxlength="11"
+          type="number"
+          auto-focus
+          placeholder="请输入手机号"
+          bindinput="setTel"
+          value="{{tel}}"></input>
+      </view>
+
+      <view class="codeRow" hidden="{{!isCode}}">
+        <view class="formField codeField">
+          <input
+            class="formInput"
+            maxlength="6"
+            type="number"
+            bindinput="setCode"
+            placeholder="请输入验证码"
+            value="{{code}}"></input>
+        </view>
+        <button
+          type="primary"
+          class="codeBtn"
+          open-type="getUserInfo"
+          bindgetuserinfo="getCode"
+          disabled="{{disabled2}}"
+          loading="{{loading}}">{{loadingtext}}</button>
+      </view>
+
+      <view class="protocolWrap">
+        <checkbox-group bindchange="checkboxAllChange">
+          <label class="protocolRow">
+            <checkbox class="protocolCheckbox" value="1" checked="{{checked3 == '1' && checkProtocol == '1'}}"></checkbox>
+            <view class="protocolText">
+              <text class="protocolPlain">我已阅读并同意</text>
+              <navigator class="protocolLink" url="/pages/protocol/protocol">《用户使用条款》</navigator>
+              <view class="protocolInlineGroup">
+                <text class="protocolPlain">和</text>
+                <navigator class="protocolLink" url="/pages/securityProtocol/securityProtocol">《用户隐私协议》</navigator>
+              </view>
+            </view>
+          </label>
+        </checkbox-group>
+      </view>
+
+      <button
+        type="primary"
+        class="submitBtn"
+        open-type="getUserInfo"
+        disabled="{{disabled3 || disabledProtocol}}"
+        bindgetuserinfo="registerUser">{{typeName}}</button>
+
+      <view class="divider">
+        <text class="dividerText">其他登录方式</text>
+      </view>
+
+      <navigator class="phoneEntry" url="/pages/login/login">
+        <view class="phoneBtn">手机号授权登录</view>
+      </navigator>
     </view>
-    <view class='view22'>
-      <button type='primary' class='button2' open-type="getUserInfo" bindgetuserinfo="getCode" disabled='{{disabled2}}' loading='{{loading}}'>{{loadingtext}}</button>
+
+    <view class="tipCard">
+      <view class="tipTitle">登录提示</view>
+      <view class="tipItem">请确认已安装并使用相关门禁设备。</view>
+      <view class="tipItem">登录后若暂无权限，请联系管理中心授权。</view>
     </view>
-  </view>
-  <view class='view3'>
-    <checkbox-group bindchange='checkboxChange'>
-      <checkbox value="1">
-        <label>我已阅读并接受</label>
-      </checkbox>
-    </checkbox-group>
-    <navigator class='navigator3' url='/pages/protocol/protocol'>《用户使用条款》</navigator>
-  </view>
-  <view class='view3'>
-    <checkbox-group bindchange='checkboxProtocolChange'>
-      <checkbox value="1">
-        <label>我已阅读并接受</label>
-      </checkbox>
-    </checkbox-group>
-    <navigator class='navigator3' url='/pages/securityProtocol/securityProtocol'>《用户隐私协议》</navigator>
-  </view>
-  <view class="tip">
-    <view>提示：</view>
-    <view>1、请确认有安装使用相关的设备！</view>
-    <view>2、若登录后您没有权限，请联系管理中心授权！</view>
-  </view>
-  <view class='view4'>
-    <button type='primary' class='button4' open-type="getUserInfo" disabled='{{disabled3||disabledProtocol}}' bindgetuserinfo="registerUser">{{typeName}}</button>
   </view>
 </view>

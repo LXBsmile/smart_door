@@ -1,0 +1,221 @@
+.container{
+  background:#f5f7fb;
+  height:100vh;
+  min-height:100%;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  box-sizing:border-box;
+}
+
+.tools,
+.body{
+  width:92%;
+  margin-left:auto;
+  margin-right:auto;
+  flex-shrink:0;
+  box-sizing:border-box;
+}
+
+.tools{
+  margin-top:0.8rem;
+  padding:0.76rem 0.8rem 0.78rem;
+  background:#fff;
+  border-radius:0.45rem;
+  box-shadow:0 0.25rem 0.8rem rgba(25,42,70,0.07);
+  box-sizing:border-box;
+}
+
+.filter{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:0.66rem;
+  padding:0.14rem;
+  background:#f3f6fa;
+  border-radius:0.44rem;
+}
+
+.tag{
+  width:32%;
+  min-width:0;
+  text-align:center;
+  border:none;
+  padding:0;
+  border-radius:0.34rem;
+  line-height:1.95rem;
+  background:transparent;
+  color:#6d7886;
+  font-size:0.82rem;
+  font-weight:500;
+  box-sizing:border-box;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.tag_on{
+  background:#339adc;
+  color:#fff;
+  box-shadow:0 0.18rem 0.38rem rgba(51,154,220,0.24);
+}
+
+.searchRow{
+  display:flex;
+  align-items:center;
+  padding:0.14rem;
+  background:#f8fafc;
+  border:1px solid #dbe5ef;
+  border-radius:0.44rem;
+  box-sizing:border-box;
+}
+
+.searchInput{
+  flex:1;
+  min-width:0;
+  height:1.9rem;
+  border:none;
+  background:transparent;
+  padding:0 0.62rem;
+  color:#384454;
+  font-size:0.82rem;
+}
+
+.searchBtn{
+  margin-left:0.2rem;
+  min-width:3.55rem;
+  background:#339adc;
+  color:#fff;
+  padding:0 0.82rem;
+  height:1.86rem;
+  border-radius:0.34rem;
+  box-shadow:0 0.16rem 0.36rem rgba(51,154,220,0.22);
+  flex-shrink:0;
+  white-space:nowrap;
+  font-size:0.8rem;
+  font-weight:500;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+}
+
+.recordList{
+  margin-top:0.5rem;
+  flex:1;
+  height:0;
+  min-height:0;
+  padding-bottom:0.52rem;
+  box-sizing:border-box;
+}
+
+.recordCard{
+  width:100%;
+  margin-bottom:0.62rem;
+  padding:0.7rem 0.86rem 0.76rem;
+  background:#fff;
+  border:1px solid #d7d7d7;
+  border-radius:0.56rem;
+  box-shadow:none;
+  box-sizing:border-box;
+}
+
+.cardHead{
+  display:flex;
+  min-width:0;
+  align-items:flex-start;
+  justify-content:space-between;
+}
+
+.cardMain{
+  flex:1;
+  min-width:0;
+}
+
+.cardTitle{
+  color:#263446;
+  font-size:1.18rem;
+  font-weight:600;
+  line-height:1.38rem;
+  word-break:break-all;
+}
+
+.cardTime{
+  margin-top:0.18rem;
+  color:#b0b0b0;
+  font-size:0.76rem;
+  line-height:0.96rem;
+}
+
+.cardBadge{
+  max-width:5.8rem;
+  margin-left:0.62rem;
+  padding:0.24rem 0.72rem;
+  border-radius:0.34rem;
+  background:#eef7ff;
+  color:#1590db;
+  font-size:0.82rem;
+  font-weight:600;
+  line-height:1.12rem;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  flex-shrink:1;
+  box-sizing:border-box;
+}
+
+.detailGrid{
+  display:flex;
+  flex-wrap:wrap;
+  margin-top:0.5rem;
+  padding-top:0.48rem;
+  border-top:1px solid #ececec;
+}
+
+.detailItem{
+  width:50%;
+  min-width:0;
+  padding-top:0.12rem;
+  padding-right:0.52rem;
+  padding-bottom:0.26rem;
+  box-sizing:border-box;
+}
+
+.detailLabel{
+  display:block;
+  color:#b0b0b0;
+  font-size:0.82rem;
+  line-height:1rem;
+}
+
+.detailValue{
+  display:block;
+  margin-top:0.12rem;
+  color:#333;
+  font-size:0.92rem;
+  line-height:1.18rem;
+  font-weight:500;
+  white-space:normal;
+  word-break:break-all;
+}
+
+.empty{
+  padding:1.4rem 0.8rem;
+  text-align:center;
+  color:#8a96a6;
+  font-size:0.82rem;
+}
+
+.loadMore{
+  padding:0.44rem 0 0.18rem;
+  text-align:center;
+  color:#98a3b1;
+  font-size:0.72rem;
+}
+
+.listBottomSpace{
+  height:1.6rem;
+  flex-shrink:0;
+}

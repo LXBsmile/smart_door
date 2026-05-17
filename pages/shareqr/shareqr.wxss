@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  
+  margin-top: 1rem;
 }
 
 .img-box {
@@ -23,16 +23,6 @@
   z-index: -1;
   width: 100%;
   height: 100%;
-}
-
-.yellow {
-  height: 0.2rem;
-  background-color: #febb17;
-  margin-top: 4.3%;
-  margin-right: 4%;
-  margin-left: 4%;
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
 }
 
 .slot {

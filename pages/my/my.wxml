@@ -1,76 +1,118 @@
 <!--pages/my/my.wxml-->
-<wxs module="tools">
-  var cryptoTelNo = function (tel) {
-    if (!tel) return tel;
-    var reg = getRegExp('(\d{3})\d{4}(\d{4})', 'g');
-    return tel.replace(reg, '$1****$2');
-  }
-  module.exports = {
-    cryptoTelNo: cryptoTelNo
-  }
-</wxs>
+<view class='container my-page'>
+  <view class="customNav" style="height: {{navBarHeight}}px; padding-top: {{statusBarHeight}}px;">
+    <view class="customNavInner" style="height: {{navContentHeight}}px; padding-right: {{navRightSpace}}px;">
+      <picker
+        wx:if="{{showCourtPicker&&allcourts.length}}"
+        class="navCourtPicker"
+        bindchange='morecourts'
+        value="{{pickerIndex}}"
+        range="{{allcourts}}"
+        range-key='GroupName'>
+        <view class="navCourtButton">
+          <text class="navCourtName">{{thisCourtName}}</text>
+        </view>
+      </picker>
+      <view wx:else class="navCourtButton navCourtPlaceholder">
+        <text class="navCourtName">小区选择</text>
+      </view>
+    </view>
+  </view>
 
-<view class='container'>
-  <view class='view1'>
-    <view class='view11'>
-      <!-- <image hidden="{{!thisuser.f_headpic}}" class='image1' src='{{thisuser.f_headpic}}'></image> -->
-      <image class='image1' src='/images/header.png'></image>
+  <view class='pageGlow pageGlowTop'></view>
+  <view class='pageGlow pageGlowBottom'></view>
 
-    </view>
-    <view class='view12'>
-      <!-- <text class='text11'>{{thisuser.f_nickname}}\n</text> -->
-      <text class='text11'>欢迎使用智慧云门禁</text>
-      <view>
-        <text class='text12'>{{tools.cryptoTelNo(tel)}}</text>
-        <!-- <view class='view121' bindtap='modifytel' hidden="{{!isRegisted}}">修改手机号码</view> -->
-        <view class='view121' bindtap='modifytel' hidden="{{isRegisted}}">登录/注册</view>
-        <view class='view121' bindtap='logout' hidden="{{!isRegisted}}">退出登录</view>
+  <view class='topWrap'>
+    <view class='topCard'>
+      <view class='topBadgeRow'>
+        <text class='topWelcome'>欢迎使用智慧云门禁</text>
+        <view class='statusTag ghost' hidden='{{!userTagText}}'>{{userTagText}}</view>
+      </view>
+      <view class='userRow'>
+        <view class='avatarBox'>
+          <view class='avatarHalo'></view>
+          <image class='image1' src='/images/header.png'></image>
+        </view>
+        <view class='topInfo'>
+          <text class='phoneText' wx:if='{{isRegisted}}'>{{maskedName}}</text>
+          <text class='phoneText' wx:else>登录后查看账号信息</text>
+          <view class='contactRow' wx:if='{{isRegisted}}'>
+            <text class='phoneSubText' wx:if='{{maskedTel}}'>{{maskedTel}}</text>
+            <view class='actionBtn ghost compact' bindtap='logout'>退出登录</view>
+          </view>
+
+          <view class='actionRow' hidden='{{isRegisted}}'>
+            <view class='actionBtn primary' bindtap='modifytel'>登录/注册</view>
+          </view>
+        </view>
+      </view>
+
+      <view class='summaryRow' hidden='{{!isRegisted||(!showValidity&&!showDelay&&!showBalance&&!showRecharge)}}'>
+        <view class='summaryItem' wx:if='{{showValidity||showDelay}}'>
+          <view class='summaryHead'>
+            <view class='summaryLabel'>权限期限</view>
+            <view class='summaryAction' bindtap='gotodelay' wx:if='{{showDelay}}'>延期</view>
+          </view>
+          <view class='summaryValue' wx:if='{{showValidity}}'>{{validity}}</view>
+          <view class='summaryValue summaryValueMuted' wx:else>--</view>
+        </view>
+        <view class='summaryItem noBorder' wx:if='{{showBalance && showRecharge}}'>
+          <view class='summaryHead'>
+            <view class='summaryLabel'>账户余额</view>
+            <view class='summaryAction' bindtap='gotocharge'>充值</view>
+          </view>
+          <view class='summaryValue'>{{money}}元</view>
+        </view>
       </view>
     </view>
   </view>
-  <modal hidden="{{hiddenmodal}}" title="添加家庭成员" confirm-text="确认" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm">
-    <input type='text' maxlength='11' type='number' placeholder="请输入手机号" bindinput='setMemberID' value='{{inputedID}}' />
-  </modal>
-  <modal hidden='{{hiddenmodal2}}' title='该用户未注册，请通过扫码添加' confirm-text='完成' no-cancel='true' bindconfirm='complete2'>
-    <view class="canvas-box">
-      <canvas style="width:200px;height:200px;" canvas-id="mycanvas" />
-    </view>
-  </modal>
-  <view class='yellow' hidden="{{!isRegisted}}"></view>
-  <view class='head' hidden="{{!isRegisted}}">
-    <image class='img_court' src='/images/bzzx_xq.png'></image>
-    <view class='court_name'>{{thiscourt.GroupName}}</view>
-    <picker bindchange='morecourts' value="{{index}}" range="{{allcourts}}" range-key='GroupName'>
-      <view class='court12'>切换小区</view>
-    </picker>
+
+  <view class='guestCard' hidden='{{isRegisted}}'>
+    <view class='guestTitle'>登录后可管理个人门禁信息</view>
+    <view class='guestDesc'>完成授权后，这里会展示权限期限和常用功能入口。</view>
   </view>
-  <view class='body'>
-    <block wx:for-items="{{members}}" wx:key="item.f_userid">
-      <view class='view42'>
-        <view class='view421'>
-          <image class='img421' mode='scaleToFill' src='{{item.f_headpic}}'></image>
-        </view>
-        <view class='view422'>
-          <view class='text422'>{{item.f_nickname}}</view>
-          <view class='text4221'>{{item.f_Tel}}</view>
-        </view>
-        <view class='view423'>
-          <text class='text4231' hidden='true'>{{item.f_leaveTime}}\n</text>
-          <text class='text4232' hidden='{{!isMain}}' data-id='{{item.f_UnionID}}' data-it='{{item.f_nickname}}' bindtap='deleteit'>删除</text>
-        </view>
+
+  <view class='contentArea' hidden='{{!isRegisted}}'>
+    <view class='sectionCard menuSection'>
+      <view class='sectionHead sectionHeadMenu'>
+        <text class='sectionTitle'>常用服务</text>
+        <text class='sectionHint'>我的记录与联系方式</text>
       </view>
-    </block>
-  </view>
-  <block wx:if='{{isMain&&members.length<4}}'>
-    <view class='view3' hidden=''>
-      <view class='view31'>添加成员
-      </view>
-      <view class='view32' bindtap='addmem'>
-        <image class='img321' src='/images/me_icon_add.png'></image>
+
+      <view class='menuWrap noTopBorder'>
+        <view class='view41' bindtap='gotoMembers' hidden='{{!showMembers}}'>
+          <view class='menuDot'></view>
+          <view class='menuTextWrap'>
+            <view class='navi411'>成员管理</view>
+          </view>
+          <view class='arrowIcon'></view>
+        </view>
+        <view class='view41' bindtap='gotoPassRecord'>
+          <view class='menuDot'></view>
+          <view class='menuTextWrap'>
+            <view class='navi411'>通行记录</view>
+          </view>
+          <view class='arrowIcon'></view>
+        </view>
+        <view class='view41' bindtap='gotoPaymentRecord' hidden='{{!showRecharge}}'>
+          <view class='menuDot'></view>
+          <view class='menuTextWrap'>
+            <view class='navi411'>缴费记录</view>
+          </view>
+          <view class='arrowIcon'></view>
+        </view>
+        <view class='view41' bindtap='gotoHelp2' hidden='{{!hasCourtList}}'>
+          <view class='menuDot'></view>
+          <view class='menuTextWrap'>
+            <view class='navi411'>联系我们</view>
+          </view>
+          <view class='arrowIcon'></view>
+        </view>
       </view>
     </view>
-  </block>
+  </view>
 </view>
+
 <view class="tabBar">
   <view class="tabBar-item" bindtap='switchtab1'>
     <view class="viewalltab">
@@ -78,7 +120,7 @@
     </view>
     <view class="tabBartext">首页</view>
   </view>
-  <view class="tabBar-item" bindtap='switchtab2' hidden="{{!userid}}">
+  <view class="tabBar-item" bindtap='switchtab2' hidden="{{!isRegisted||!canOfflinePermission}}">
     <view class="viewalltab">
       <image class="icon" src='/images/qxm2.png'></image>
     </view>

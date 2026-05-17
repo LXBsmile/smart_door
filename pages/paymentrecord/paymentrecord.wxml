@@ -1,0 +1,42 @@
+<view class='container'>
+  <view class='tools'>
+    <view class='filter'>
+      <view class='tag {{filterValue=="30"?"tag_on":""}}' data-value='30' bindtap='setFilter'>近30天内</view>
+      <view class='tag {{filterValue=="90"?"tag_on":""}}' data-value='90' bindtap='setFilter'>近90天内</view>
+      <view class='tag {{filterValue=="all"?"tag_on":""}}' data-value='all' bindtap='setFilter'>全部</view>
+    </view>
+    <view class='searchRow'>
+      <input class='searchInput' placeholder='搜索名称' bindinput='inputKeyword' bindconfirm='search' confirm-type='search' value='{{keyword}}'></input>
+      <view class='searchBtn' bindtap='search'>搜索</view>
+    </view>
+  </view>
+
+  <scroll-view class='body recordList' scroll-y='true' lower-threshold='80' bindscrolltolower='loadNextPage'>
+    <view class='empty' hidden='{{!loading}}'>加载中...</view>
+    <view class='empty' hidden='{{loading || list.length}}'>{{emptyText}}</view>
+    <block wx:for='{{list}}' wx:key='f_PayTime'>
+      <view class='recordCard'>
+        <view class='cardHead'>
+          <view class='cardMain'>
+            <view class='cardTitle'>{{item.f_UserName}}</view>
+            <view class='cardTime'>{{item.f_PayTime}}</view>
+          </view>
+          <view class='moneyText'>¥{{item.f_PayMoney}}</view>
+        </view>
+        <view class='detailGrid'>
+          <view class='detailItem'>
+            <text class='detailLabel'>操作类型</text>
+            <text class='detailValue'>{{item.f_payType}}</text>
+          </view>
+          <view class='detailItem'>
+            <text class='detailLabel'>支付方式</text>
+            <text class='detailValue'>{{item.f_payMode}}</text>
+          </view>
+        </view>
+      </view>
+    </block>
+    <view class='loadMore' hidden='{{!loadingMore}}'>加载中...</view>
+    <view class='loadMore' hidden='{{loading || loadingMore || hasMore || !list.length}}'>没有更多了</view>
+    <view class='listBottomSpace'></view>
+  </scroll-view>
+</view>

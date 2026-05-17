@@ -1,4 +1,7 @@
 {
   "navigationBarTitleText": "公告中心",
-  "enablePullDownRefresh": true
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "courtpicker": "/components/courtpicker/courtpicker"
+  }
 }

@@ -7,10 +7,10 @@ Page({
     f_noticeMsg:''
   },
   onLoad: function (options) {
-    console.log(options)
     this.setData({
-      f_noticeName:options.f_noticeName,//options.id,
-      f_noticeMsg: options.f_noticeMsg//options.f_noticeMsg
+      f_noticeID: decodeURIComponent(options.f_noticeID || ''),
+      f_noticeName: decodeURIComponent(options.f_noticeName || ''),
+      f_noticeMsg: decodeURIComponent(options.f_noticeMsg || '')
     })
   },
 
@@ -26,7 +26,9 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    util.refreshUserInfo()
+    if (!util.getStoredUserInfo()) {
+      util.refreshUserInfo(null, false)
+    }
   },
   /**
    * 生命周期函数--监听页面隐藏

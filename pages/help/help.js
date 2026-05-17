@@ -16,7 +16,9 @@ Page({
     index: '0'
   },
   onShow: function () {
-    util.refreshUserInfo()
+    if (!util.getStoredUserInfo()) {
+      util.refreshUserInfo(null, false)
+    }
   },
   onReady: function (options) {
     var that = this
@@ -39,40 +41,42 @@ Page({
   },
   getMyInfo: function () {
     var that = this
-    var user = app.globalData.userInfo
-    var courts = util.getJson('GetCourts', {}, function (res) {
-      if (res.Status == 'success') {
-        if (res.Groups.length < 1) {
-          util.noticeArea('index')
-          return
-        }
-        if (!res.Groups[app.globalData.courtindex]) {
-          app.globalData.courtindex = 0
-        }
-        var index = that.data.groupindex
-        that.setData({
-          courts: res.Groups,
-          thisCourtName: res.Groups[index].GroupName,
-          thisCourtID: res.Groups[index].f_id,
-          index: app.globalData.courtindex
-        })
-        util.getJson('GetCourtByID', { 'CourtID': that.data.thisCourtID }, function (res2) {
-          if (res2.Status == 'success') {
-            that.setData({
-              unit: res2.Group.f_unit,
-              tel: res2.Group.f_tel,
-              address: res2.Group.f_address,
-              email: res2.Group.f_mail,
-              web: res2.Group.f_Web,
-              introduce: res2.Group.f_introduce
-            })
-          } else {
-            util.notice('获取小区信息失败', res2.Result)
-          }
-        })
-      } else {
-        util.notice('加载小区信息失败', res.Result)
+    util.ensureCourtState(function (stored) {
+      if (!stored.groups.length) {
+        util.noticeArea('index')
+        return
       }
+      const index = stored.groups[that.data.groupindex] ? that.data.groupindex : stored.index
+      const currentCourt = stored.groups[index] || stored.currentCourt || {}
+      if (typeof app.setCurrentCourt === 'function') {
+        app.setCurrentCourt(currentCourt, index)
+      } else {
+        app.globalData.courtindex = index
+        app.thisCourt = currentCourt
+      }
+      that.setData({
+        courts: stored.groups,
+        thisCourtName: currentCourt.GroupName,
+        thisCourtID: currentCourt.f_id,
+        index: index,
+        groupindex: index
+      })
+      util.getJson('GetCourtByID', { 'CourtID': that.data.thisCourtID }, function (res2) {
+        if (res2.Status == 'success') {
+          that.setData({
+            unit: res2.Group.f_unit,
+            tel: res2.Group.f_tel,
+            address: res2.Group.f_address,
+            email: res2.Group.f_mail,
+            web: res2.Group.f_Web,
+            introduce: res2.Group.f_introduce
+          })
+        } else {
+          util.notice('获取小区信息失败', res2.Result)
+        }
+      })
+    }, {
+      goRegist: false
     })
   },
   selectcourt: function (e) {
@@ -84,7 +88,12 @@ Page({
       groupindex: index,
       index: index
     })
-    app.globalData.courtindex = index//记忆小区
+    if (typeof app.setCurrentCourt === 'function') {
+      app.setCurrentCourt(that.data.courts[index], Number(index))
+    } else {
+      app.globalData.courtindex = index
+      app.thisCourt = that.data.courts[index]
+    }
     util.getJson('GetCourtByID', { 'CourtID': that.data.thisCourtID }, function (res) {
       if (res.Status == 'success') {
         that.setData({

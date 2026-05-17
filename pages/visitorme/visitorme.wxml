@@ -1,0 +1,73 @@
+<view class='container'>
+  <image class='img_bg' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
+  <view class='key_list'>
+    <view class='tools'>
+      <block wx:if='{{useOwnerKeyList}}'>
+        <view class='filter'>
+          <view class='tag {{filterType=="all"?"tag_on":""}}' data-type='all' bindtap='setFilter'>全部</view>
+          <view class='tag {{filterType=="door"?"tag_on":""}}' data-type='door' bindtap='setFilter'>门禁</view>
+          <view class='tag {{filterType=="lift"?"tag_on":""}}' data-type='lift' bindtap='setFilter'>梯控</view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class='filter visitorFilter'>
+          <view class='tag {{filterType=="all"?"tag_on":""}}' data-type='all' bindtap='setFilter'>全部</view>
+          <view class='tag {{filterType=="done"?"tag_on":""}}' data-type='done' bindtap='setFilter'>已到访</view>
+          <view class='tag {{filterType=="pending"?"tag_on":""}}' data-type='pending' bindtap='setFilter'>未到访</view>
+        </view>
+      </block>
+      <view class='searchRow'>
+        <input class='searchInput' placeholder='搜索名称' bindinput='inputKeyword' bindconfirm='search' confirm-type='search' value='{{keyword}}'></input>
+        <view class='searchBtn' bindtap='search'>查询</view>
+      </view>
+    </view>
+    <view class='view_keylist'>
+      <block wx:if='{{useOwnerKeyList}}'>
+        <block wx:for='{{keys}}' wx:key='itemKey'>
+          <view class='view_content'>
+            <view class='leftBox'>
+              <view class='view_name'>{{item.f_devName}}</view>
+              <view class='view_type'>{{item.typeName}}{{item.type=="lift"&&item.floorInfo.floors.length?" 长按开锁图标可单选楼层":""}}</view>
+            </view>
+            <view class='rightBox'>
+              <image
+                class='img_lock {{openingDoor?"img_lock_disabled":""}}'
+                data-index='{{index}}'
+                bindtap='unlock'
+                bindlongpress='handleUnlockLongPress'
+                src='/images/lock.png'
+                mode='aspectFit'></image>
+            </view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <view class='visitorCardList'>
+          <block wx:for='{{keys}}' wx:key='itemKey'>
+            <view class='visitorCard' data-index='{{index}}' bindtap='openVisitorPass'>
+              <view class='visitorCardHead'>
+                <view class='visitorApplicant'>{{item.visitorName}}</view>
+                <view class='statusBadge {{item.statusClass}}'>{{item.statusText}}</view>
+              </view>
+              <view class='visitorMeta'>
+                <view class='visitorMetaRow'>
+                  <view class='visitorMetaLabel'>申请时间</view>
+                  <view class='visitorMetaValue'>{{item.createTime}}</view>
+                </view>
+                <view class='visitorMetaRow'>
+                  <view class='visitorMetaLabel'>通行小区</view>
+                  <view class='visitorMetaValue'>{{item.courtName}}</view>
+                </view>
+              </view>
+              <view class='visitorCardFoot'>
+                <view class='visitorDevices'>{{item.deviceSummary}}</view>
+                <view class='visitorOpenText'>查看通行</view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </block>
+      <view class='empty-tip' wx:if='{{!keys.length}}'>{{emptyText}}</view>
+    </view>
+  </view>
+</view>

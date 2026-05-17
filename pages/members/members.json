@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "成员管理",
+  "enablePullDownRefresh": true,
+  "usingComponents": {
+    "courtpicker": "/components/courtpicker/courtpicker"
+  }
+}

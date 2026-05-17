@@ -1,0 +1,114 @@
+<view class='container vm-page'>
+  <image class='img_bg' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
+  <view class='module-card' wx:if='{{pageMode=="menu"}}'>
+    <view class='module-grid'>
+      <view class='module-item' wx:if='{{isAdmin}}' data-module='visitor' bindtap='openModule'>
+        <view class='module-icon-wrap'>
+          <image class='module-icon module-icon-line' src='/images/fxys_fk.png' mode='aspectFit'></image>
+        </view>
+        <view class='module-name'>来访开启</view>
+      </view>
+      <view class='module-item' data-module='manage' bindtap='openModule'>
+        <view class='module-icon-wrap'>
+          <image class='module-icon module-icon-line' src='/images/fxys_rq.png' mode='aspectFit'></image>
+        </view>
+        <view class='module-name'>访客申请</view>
+      </view>
+      <view class='module-item' data-module='share' bindtap='openModule'>
+        <view class='module-icon-wrap'>
+          <image class='module-icon module-icon-solid' src='/images/home_fxys.png' mode='aspectFit'></image>
+        </view>
+        <view class='module-name'>分享钥匙</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='vm-card' wx:else>
+    <!-- <courtpicker courtName='{{thisCourtName}}' courts='{{courts}}' index='{{index}}' showPicker='{{false}}' bindchange='selectcourt'></courtpicker> -->
+    <view class='top-panel'>
+      <block wx:if='{{pageMode=="applylist"}}'>
+        <view class='filter-group apply-filter'>
+          <view class='filter-item {{filterType=="all"?"on":""}}' data-type='all' bindtap='setFilter'>全部</view>
+          <view class='filter-item {{filterType=="done"?"on":""}}' data-type='done' bindtap='setFilter'>已到访</view>
+          <view class='filter-item {{filterType=="pending"?"on":""}}' data-type='pending' bindtap='setFilter'>未到访</view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class='filter-group'>
+          <view class='filter-item {{filterType=="all"?"on":""}}' data-type='all' bindtap='setFilter'>全部</view>
+          <view class='filter-item {{filterType=="door"?"on":""}}' data-type='door' bindtap='setFilter'>门禁</view>
+          <view class='filter-item {{filterType=="lift"?"on":""}}' data-type='lift' bindtap='setFilter'>梯控</view>
+        </view>
+      </block>
+      <view class='search-row'>
+        <input class='search-input' placeholder='输入名称' bindinput='inputKeyword' bindconfirm='search' confirm-type='search' value='{{keyword}}'></input>
+        <view class='search-btn' bindtap='search'>查询</view>
+      </view>
+    </view>
+
+    <view class='add-apply-row' wx:if='{{pageMode=="applylist"}}' bindtap='gotoAddApply'>
+      <view class='add-apply-text'>添加申请</view>
+      <image class='add-apply-icon' src='/images/me_icon_add.png' mode='aspectFit'></image>
+    </view>
+
+    <view class='action-panel' wx:if='{{pageMode!="applylist"}}' bindtap='toggleAll'>
+      <view class='check-wrap'>
+        <view class='checkbox {{checkedAll?"checked":""}}'>
+          <view class='checkboxMark'></view>
+        </view>
+        <text class='check-label'>全选</text>
+      </view>
+    </view>
+
+    <view class='list-panel' wx:if='{{pageMode=="applylist"}}'>
+      <block wx:for="{{applications}}" wx:key='id'>
+        <view class='visitor-card' data-index='{{index}}' bindtap='openVisitorPass'>
+          <view class='visitor-card-head'>
+            <view class='visitor-applicant'>{{item.visitorName}}</view>
+            <view class='status-badge {{item.status=="done"?"status-done":"status-pending"}}'>{{item.statusText}}</view>
+          </view>
+          <view class='visitor-meta'>
+            <view class='visitor-meta-row'>
+              <view class='visitor-meta-label'>申请时间</view>
+              <view class='visitor-meta-value'>{{item.createTime}}</view>
+            </view>
+            <view class='visitor-meta-row'>
+              <view class='visitor-meta-label'>通行小区</view>
+              <view class='visitor-meta-value'>{{item.courtName}}</view>
+            </view>
+          </view>
+          <view class='visitor-card-foot'>
+            <view class='visitor-devices'>{{item.deviceSummary}}</view>
+            <view class='visitor-open-text'>查看通行</view>
+          </view>
+        </view>
+      </block>
+      <view class='empty-tip' wx:if='{{!applications.length}}'>暂无访客记录</view>
+    </view>
+
+    <view class='list-panel' wx:else>
+      <block wx:for="{{keys}}" wx:key='itemKey'>
+        <view class='item-row' bindtap='toggleItem' data-index='{{index}}'>
+          <view class='checkbox {{item.checked?"checked":""}} {{item.partialChecked?"partial":""}}'>
+            <view class='checkboxMark'></view>
+          </view>
+          <view class='item-info'>
+            <view class='item-name'>{{item.f_devName}}</view>
+            <view class='item-type'>{{item.typeName}}</view>
+          </view>
+          <view class='floor-toggle {{item.floorExpanded?"expanded":""}}' wx:if='{{item.type=="lift"&&item.floorItems.length}}' catchtap='toggleFloorPanel' data-index='{{index}}'>
+            <view class='floor-toggle-arrow'></view>
+          </view>
+        </view>
+        <view class='floor-panel {{item.checked?"":"floor-panel-disabled"}}' wx:if='{{item.floorExpanded&&item.floorItems.length}}'>
+          <block wx:for='{{item.floorItems}}' wx:for-item='floor' wx:for-index='floorIndex' wx:key='label'>
+            <view class='floor-cell {{floor.checked?"checked":""}}' catchtap='toggleFloor' data-index='{{index}}' data-floor-index='{{floorIndex}}'>{{floor.label}}层</view>
+          </block>
+        </view>
+      </block>
+      <view class='empty-tip' wx:if='{{!keys.length}}'>暂无可授权设备</view>
+    </view>
+
+    <view class='bottom-btn {{hasSelected?"active":""}}' wx:if='{{pageMode!="applylist"}}' bindtap='gotoApply'>{{returnPage=="visitorapply"?"确定":"提交申请"}}</view>
+  </view>
+</view>

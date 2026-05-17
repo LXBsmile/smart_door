@@ -1,0 +1,40 @@
+<view class='container'>
+  <view class='tools'>
+    <view class='filter'>
+      <block wx:for='{{filterList}}' wx:key='value'>
+        <view class='tag {{filterValue==item.value?"tag_on":""}}' data-value='{{item.value}}' bindtap='setFilter'>{{item.label}}</view>
+      </block>
+    </view>
+    <view class='searchRow'>
+      <input class='searchInput' placeholder='搜索姓名' bindinput='inputKeyword' bindconfirm='search' confirm-type='search' value='{{keyword}}'></input>
+      <view class='searchBtn' bindtap='search'>搜索</view>
+    </view>
+  </view>
+
+  <scroll-view class='body recordList' scroll-y='true' lower-threshold='80' bindscrolltolower='loadNextPage'>
+    <view class='empty' hidden='{{!loading}}'>加载中...</view>
+    <view class='empty' hidden='{{loading || list.length}}'>{{emptyText}}</view>
+    <block wx:for='{{list}}' wx:key='f_RecordID'>
+      <view class='recordCard'>
+        <view class='cardHead'>
+          <view class='cardMain'>
+            <view class='cardTitle'>{{item.displayTitle}}</view>
+            <view class='cardTime'>{{item.displayTime}}</view>
+          </view>
+          <view class='cardBadge' wx:if='{{item.displayType}}'>{{item.displayType}}</view>
+        </view>
+        <view class='detailGrid'>
+          <block wx:for='{{item.detailList}}' wx:key='key' wx:for-item='detail'>
+            <view class='detailItem'>
+              <text class='detailLabel'>{{detail.label}}</text>
+              <text class='detailValue'>{{detail.value}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+    </block>
+    <view class='loadMore' hidden='{{!loadingMore}}'>加载中...</view>
+    <view class='loadMore' hidden='{{loading || loadingMore || hasMore || !list.length}}'>没有更多了</view>
+    <view class='listBottomSpace'></view>
+  </scroll-view>
+</view>

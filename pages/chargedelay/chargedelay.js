@@ -37,7 +37,9 @@ Page({
   onReady: function () {
   },
   onShow: function () {
-    util.refreshUserInfo()
+    if (!util.getStoredUserInfo()) {
+      util.refreshUserInfo()
+    }
   },
   onHide: function () {
   },

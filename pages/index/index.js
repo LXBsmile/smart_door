@@ -1,14 +1,36 @@
 const app = getApp()
 var util = require('../../utils/util')
+const featureMock = require('../../utils/featureMock')
+const appService = require('../../utils/services/appService')
 var flag = false
 Page({
   data: {
     hiddenmodal: true,
     password: '',
     result: '',
-    isRegisted: false
+    isRegisted: false,
+    menus: [],
+    announcement: '',
+    bannerImage: '/images/banner.png',
+    debugOpen: featureMock.DEBUG_OPEN_PERMISSION,
+    canOfflinePermission: false,
+    courts: [],
+    thisCourtName: '',
+    thisCourtID: '',
+    index: '0',
+    statusBarHeight: 20,
+    navBarHeight: 64,
+    navContentHeight: 44,
+    navRightSpace: 100
   },
   onShow: function () {
+    if (this._skipNextShowRefresh) {
+      this._skipNextShowRefresh = false
+      return
+    }
+    this.refreshTabData({
+      refreshCached: true
+    })
   },
   onReady: function () {
     setTimeout(function () {
@@ -18,18 +40,189 @@ Page({
     //setTimeout(function(){flag = true}, 2000)
   },
   onLoad: function () {
-    util.refreshUserInfo(() => {
-      this.setData({
-        isRegisted: app.globalData.isRegisted
-      })
-    }, false)
+    this._skipNextShowRefresh = true
+    this.initCustomNav()
+    this.refreshTabData({
+      refreshCached: true
+    })
   },
   onPullDownRefresh: function () {
-    app.globalData.userInfo = null
-    util.refreshUserInfo()
+    if (!app.globalData.isRegisted || !util.isRegisteredUser(app.globalData.userInfo)) {
+      this.applyHomeView()
+      this.getCourts()
+      wx.stopPullDownRefresh()
+      return
+    }
+    util.refreshUserInfo(() => {
+      this.applyHomeView()
+      this.getCourts({
+        refreshCached: true
+      })
+    }, false, false, true)
+  },
+  refreshTabData: function (options) {
+    const opts = options || {}
+    this._tabUserRefreshing = true
+    this.applyHomeView()
+    util.refreshUserInfoOnTabShow(() => {
+      this._tabUserRefreshing = false
+      this.applyHomeView()
+      this.getCourts({
+        refreshCached: !!opts.refreshCached
+      })
+    })
+  },
+  initCustomNav: function () {
+    let statusBarHeight = 20
+    let navContentHeight = 44
+    let navBarHeight = navContentHeight
+    let navRightSpace = 100
+
+    try {
+      const systemInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync()
+      statusBarHeight = Number(systemInfo.statusBarHeight) || statusBarHeight
+
+      if (wx.getMenuButtonBoundingClientRect) {
+        const menuRect = wx.getMenuButtonBoundingClientRect()
+        if (menuRect && menuRect.width) {
+          const topGap = Math.max(menuRect.top - statusBarHeight, 4)
+          navContentHeight = menuRect.height + topGap * 2
+          navBarHeight = navContentHeight
+          navRightSpace = Math.ceil((systemInfo.windowWidth || 375) - menuRect.left) + 8
+        }
+      }
+    } catch (e) { }
+
+    this.setData({
+      statusBarHeight,
+      navBarHeight,
+      navContentHeight,
+      navRightSpace
+    })
+  },
+  applyHomeView: function () {
+    const homeView = appService.getHomeViewModel(app.globalData.isRegisted, this.data.thisCourtID || app.thisCourt?.f_id)
+    this.setData({
+      isRegisted: app.globalData.isRegisted,
+      menus: homeView.menus || [],
+      announcement: homeView.announcement,
+      bannerImage: homeView.banner.image,
+      canOfflinePermission: !!homeView.canOfflinePermission
+    })
+  },
+  refreshCourtConfigurationHome: function (courtId) {
+    const that = this
+    const targetCourtId = String(courtId || '').trim()
+    if (!targetCourtId) return
+    util.requestCourtConfigurationInfo(targetCourtId, function () {
+      if (String(that.data.thisCourtID || '') !== targetCourtId) return
+      that.applyHomeView()
+    }, {
+      showError: true
+    })
+  },
+  applyStoredCourtHome: function (options) {
+    const opts = options || {}
+    const stored = util.getStoredCourtState()
+    if (!stored.currentCourt) {
+      this.setData({
+        courts: [],
+        thisCourtName: '',
+        thisCourtID: '',
+        index: '0',
+        announcement: ''
+      })
+      this.applyHomeView()
+      return false
+    }
+
+    this.setData({
+      courts: stored.groups,
+      thisCourtName: stored.currentCourt.GroupName,
+      thisCourtID: stored.currentCourt.f_id,
+      index: stored.index
+    })
+    util.refreshBackEndUserInfo(() => {
+      this.applyHomeView()
+    }, {
+      courtId: stored.currentCourt.f_id,
+      force: !!opts.refreshCached,
+      showError: !!opts.refreshCached
+    })
+    this.refreshCourtConfigurationHome(stored.currentCourt.f_id)
+    this.updateAnnouncement(stored.currentCourt.f_id)
+    return true
+  },
+  normalizeNoticeList: function (list) {
+    const source = Array.isArray(list) ? list : (list ? [list] : [])
+    return source.map(function (item, index) {
+      return {
+        f_noticeID: item.f_noticeID || ('notice_' + index),
+        f_noticeName: item.f_noticeName || '公告通知',
+        f_noticeMsg: item.f_noticeMsg || '',
+        f_date: item.f_date || ''
+      }
+    }).filter(function (item) {
+      return item.f_noticeName || item.f_noticeMsg
+    })
+  },
+  updateAnnouncement: function (courtId) {
+    if (!this.data.isRegisted || !courtId) {
+      this.setData({
+        announcement: ''
+      })
+      return
+    }
+
+    if (featureMock.DEBUG_OPEN_PERMISSION && !app.globalData.openId) {
+      const list = appService.getCourtNotices(courtId)
+      this.setData({
+        announcement: list.length ? list[0].f_noticeName : '暂无公告'
+      })
+      return
+    }
+
+    util.getJson('GetCourtNoticeByID', { CourtID: courtId }, (res) => {
+      if (res.Status === 'success') {
+        const list = this.normalizeNoticeList(res.Notice)
+        if (list.length) {
+          this.setData({
+            announcement: list[0].f_noticeName
+          })
+          return
+        }
+      }
+
+      if (featureMock.DEBUG_OPEN_PERMISSION) {
+        const list = appService.getCourtNotices(courtId)
+        this.setData({
+          announcement: list.length ? list[0].f_noticeName : '暂无公告'
+        })
+        return
+      }
+
+      this.setData({
+        announcement: '暂无公告'
+      })
+    })
   },
   onShareAppMessage: function (obj) { },
+  promptLogin: function () {
+    wx.showModal({
+      title: '提示',
+      content: '当前功能需要先登录，是否前往登录？',
+      cancelText: '取消',
+      confirmText: '去登录',
+      success(res) {
+        if (!res.confirm) return
+        wx.navigateTo({
+          url: '/pages/login/login',
+        })
+      }
+    })
+  },
   clickMenu: function (e) {
+    if (this._tabUserRefreshing) return
     if (flag) {
       flag = false
       setTimeout(function () {
@@ -43,7 +236,6 @@ Page({
         })
         return;
       }
-      console.log(app.globalData.isRegisted)
       if (page == 'showQR') {
         this.getScan()
       } else {
@@ -165,7 +357,87 @@ Page({
       password: ''
     })
   },
+  gotoAnno: function () {
+    wx.navigateTo({
+      url: '/pages/anno/anno',
+    })
+  },
+  getCourts: function (options) {
+    var that = this
+    const opts = options || {}
+    if (!that.data.isRegisted) {
+      that.setData({
+        courts: [],
+        thisCourtName: '',
+        thisCourtID: '',
+        index: '0',
+        announcement: ''
+      })
+      that.applyHomeView()
+      return
+    }
+    if (featureMock.DEBUG_OPEN_PERMISSION && !app.globalData.openId) {
+      const courts = featureMock.getDebugCourts()
+      that.setData({
+        courts: courts,
+        thisCourtName: courts[0].GroupName,
+        thisCourtID: courts[0].f_id,
+        index: 0
+      })
+      if (typeof app.setCurrentCourt === 'function') {
+        app.setCurrentCourt(courts[0], 0)
+      } else {
+        app.thisCourt = courts[0]
+      }
+      that.updateAnnouncement(courts[0].f_id)
+      return
+    }
+    if (!app.globalData.openId) return
+    util.ensureCourtState(function () {
+      that.applyStoredCourtHome(opts)
+    }, {
+      courtId: that.data.thisCourtID || app.globalData.currentCourtId || app.thisCourt?.f_id || '',
+      force: true,
+      showError: true,
+      goRegist: false
+    })
+  },
+  selectcourt: function (e) {
+    var index = e.detail.value
+    const selectedCourt = this.data.courts[index]
+    if (!selectedCourt) return
+    const courtId = selectedCourt.f_id
+    this.setData({
+      thisCourtName: selectedCourt.GroupName,
+      thisCourtID: courtId,
+      index: index
+    })
+    if (typeof app.setCurrentCourt === 'function') {
+      app.setCurrentCourt(selectedCourt, Number(index))
+    } else {
+      app.globalData.courtindex = index
+      app.thisCourt = selectedCourt
+    }
+    util.refreshBackEndUserInfo(() => {
+      this.applyHomeView()
+    }, {
+      courtId: courtId,
+      force: true,
+      showError: true
+    })
+    this.refreshCourtConfigurationHome(courtId)
+    this.updateAnnouncement(courtId)
+    util.refreshCourtList(() => {
+      this.applyStoredCourtHome({
+        refreshCached: true
+      })
+    }, {
+      courtId: courtId,
+      showError: true
+    })
+  },
   switchtab2: function () {
+    if (!this.data.canOfflinePermission) return
     if (flag) {
       flag = false
       setTimeout(function () {

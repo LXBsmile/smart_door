@@ -1,38 +1,66 @@
 // pages/reg2/reg2.js
 const app = getApp()
 var util = require('../../utils/util')
+
 Page({
   data: {
-    id:0
+    id: 0
+  },
+  clearTimers: function () {
+    if (this._pollTimer) {
+      clearInterval(this._pollTimer)
+      this._pollTimer = null
+    }
+    if (this._timeoutTimer) {
+      clearTimeout(this._timeoutTimer)
+      this._timeoutTimer = null
+    }
+  },
+  finishLogin: function (user) {
+    if (!util.isRegisteredUser(user)) {
+      return false
+    }
+
+    util.activateUserSession(user.f_OpenID || app.globalData.openId, user)
+    this.clearTimers()
+    wx.reLaunch({
+      url: '/pages/index/index',
+    })
+    return true
+  },
+  pollUserInfo: function () {
+    var that = this
+    util.getJson('GetUserInfo', { 'f_OpenID': app.globalData.openId }, function (res2) {
+      wx.stopPullDownRefresh()
+      if (res2 && res2.Status == 'success') {
+        that.finishLogin(res2.User || null)
+      }
+    })
   },
   onLoad: function (options) {
-    var that=this
+    var that = this
+    console.log('id', options.id)
     that.setData({
       id: options.id
     })
-  //每隔一秒刷新一下数据，如果有更新则跳到主页。
-    var interval= setInterval(function(){
-      util.getJson('GetUserInfo', { 'f_OpenID': app.globalData.openId }, function (res2) {
-        wx.stopPullDownRefresh()
-        if (res2.Status == 'success') {
-           if (res2.User.f_UnionID != null && res2.User.f_UnionID != '') {
-             clearInterval(interval);
-             wx.reLaunch({
-               url: '/pages/index/index',
-             })
-          }
-        }
-      })
-    },1000)
 
+    that._pollTimer = setInterval(function () {
+      that.pollUserInfo()
+    }, 1000)
+
+    that._timeoutTimer = setTimeout(function () {
+      that.clearTimers()
+      util.refreshUserInfo(function (user) {
+        if (that.finishLogin(user)) {
+          return
+        }
+        wx.redirectTo({
+          url: '/pages/index/index',
+        })
+      }, false, true, true)
+    }, 30000)
   },
-  onReady: function () {
-    var that=this
-    setTimeout(function(){
-      app.globalData.userInfo = null
-      wx.redirectTo({
-        url: '/pages/index/index',
-      })
-    },10000)
+  onUnload: function () {
+    this.clearTimers()
   }
 })

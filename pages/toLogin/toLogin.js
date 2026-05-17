@@ -65,8 +65,7 @@ Page({
   },
   login() {
    wx.navigateTo({
-    //  url: '/pages/login/login',
-     url: '/pages/register/register',
+     url: '/pages/login/login',
    })
   }
 })

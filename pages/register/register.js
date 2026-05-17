@@ -165,6 +165,48 @@ Page({
       })
     }
   },
+  checkboxAllChange: function (e) {
+    const checked = e.detail.value[0] == '1'
+    this.setData({
+      checked3: checked ? '1' : '0',
+      disabled3: !checked,
+      checkProtocol: checked ? '1' : '0',
+      disabledProtocol: !checked
+    })
+  },
+  finishRegisterFlow: function (user, options) {
+    const opts = options || {}
+    if (util.isRegisteredUser(user)) {
+      util.activateUserSession(user.f_OpenID || app.globalData.openId, user)
+      if (opts.goBack) {
+        wx.showToast({
+          title: this.data.typeName + '成功',
+          icon: 'success',
+          duration: 2000,
+          mask: true,
+          complete: function () {
+            setTimeout(function () {
+              wx.navigateBack({
+                delta: 1
+              })
+            }, 1500)
+          }
+        })
+        return
+      }
+      wx.reLaunch({
+        url: '/pages/index/index',
+      })
+      return
+    }
+    if (user && user.f_id) {
+      wx.navigateTo({
+        url: '/pages/reg2/reg2?id=' + encodeURIComponent(user.f_id),
+      })
+      return
+    }
+    util.notice(this.data.typeName + '失败', '未获取到完整用户信息，请稍后重试')
+  },
   //点击注册或修改:验证授权-->验证手机号-->验证验证码-->对比验证码-->注册
   registerUser: function (res) {
     //console.log(JSON.stringify(res))
@@ -196,6 +238,7 @@ Page({
     }
     util.getOpenIdPromise().then(openId => {
       app.globalData.openId = openId;
+      app.persistSession && app.persistSession()
       var userInfo = res.detail.userInfo
       util.getJson('RegisterUser', {
         'f_OpenID': openId,
@@ -212,40 +255,23 @@ Page({
       }, function (res2) {
         if (res2.Status == 'success') {
           if (that.data.regType == '1') {
-            app.globalData.userInfo['f_Tel'] = that.data.tel
-            wx.showToast({
-              title: that.data.typeName + '成功',
-              icon: 'success',
-              duration: 2000,
-              mask: true,
-              complete: function () {
-                setTimeout(function () {
-                  wx.navigateBack({
-                    delta: 1
-                  })
-                }, 1500)
-              }
-            })
+            util.refreshUserInfo(function (user) {
+              that.finishRegisterFlow(user, {
+                goBack: true
+              })
+            }, false, true, true)
           } else {
             util.refreshUserInfo(function (user) {
-              wx.navigateTo({
-                url: '/pages/reg2/reg2?id=' + user.f_id,
-              })
-            })
+              that.finishRegisterFlow(user)
+            }, false, true, true)
           }
         } else {
-          // 登录行为
-          if (res2.Result.includes('手机号已注册') || res2.Result.includes('新旧号码一致')) {
-            util.getOpenId(() => {
-              wx.reLaunch({
-                url: '/pages/index/index',
-              })
-            }, true, true)
-          } else {
-            util.notice(that.data.typeName + '失败', res2.Result)
-          }
+          const resultText = String(res2.Result || '')
+          util.notice(that.data.typeName + '失败', resultText || '请稍后重试')
         }
       })
+    }).catch(err => {
+      util.notice(that.data.typeName + '失败', err?.Result || '微信登录失败')
     })
 
 

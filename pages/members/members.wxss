@@ -1,0 +1,179 @@
+.container{
+  background:#eef2f6;
+  min-height:100%;
+  padding:24rpx;
+  box-sizing:border-box;
+}
+
+.overlay{
+  position:fixed;
+  left:0;
+  top:0;
+  right:0;
+  bottom:0;
+  background:rgba(0,0,0,0.38);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99;
+}
+
+.dialog{
+  width:78%;
+  background:#fff;
+  border-radius:24rpx;
+  padding:28rpx;
+  box-sizing:border-box;
+}
+
+.qrDialog{
+  width:82%;
+}
+
+.dialogTitle{
+  color:#333;
+  font-size:30rpx;
+  text-align:center;
+  margin-bottom:24rpx;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.dialogInput{
+  height:76rpx;
+  border:1rpx solid #d8e1ea;
+  border-radius:14rpx;
+  padding:0 20rpx;
+  font-size:28rpx;
+}
+
+.dialogActions{
+  display:flex;
+  justify-content:flex-end;
+  gap:16rpx;
+  margin-top:26rpx;
+}
+
+.dialogActions.single{
+  justify-content:center;
+}
+
+.dialogBtn{
+  min-width:140rpx;
+  height:68rpx;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 24rpx;
+  border-radius:999rpx;
+  font-size:26rpx;
+}
+
+.dialogBtn.ghost{
+  background:#eef3f8;
+  color:#5c6f81;
+}
+
+.dialogBtn.primary{
+  background:#339adc;
+  color:#fff;
+}
+
+.contentCard{
+  background:#fff;
+  border-radius:24rpx;
+  overflow:hidden;
+  box-shadow:0 8rpx 24rpx rgba(0,0,0,0.05);
+}
+
+.sectionHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:24rpx 28rpx;
+  border-bottom:1rpx solid #eef1f4;
+}
+
+.sectionTitle{
+  color:#7a8694;
+  font-size:26rpx;
+}
+
+.addMemberIcon{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-left:auto;
+}
+
+.memberList{
+  background:#fff;
+}
+
+.memberRow{
+  display:flex;
+  align-items:center;
+  padding:24rpx 28rpx;
+  border-top:1rpx solid #eef1f4;
+}
+
+.memberRow:first-child{
+  border-top:0;
+}
+
+.img421{
+  width:68rpx;
+  height:68rpx;
+  border-radius:50%;
+  margin-right:20rpx;
+  flex-shrink:0;
+}
+
+.memberInfo{
+  flex:1;
+  min-width:0;
+}
+
+.text422{
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#333;
+  font-size:30rpx;
+}
+
+.text4221{
+  color:#9aa3ad;
+  font-size:24rpx;
+  margin-top:6rpx;
+}
+
+.text4232{
+  color:#fff;
+  font-size:22rpx;
+  background:#a7a7a7;
+  padding:10rpx 18rpx;
+  border-radius:999rpx;
+}
+
+.emptyMember{
+  text-align:center;
+  color:#999;
+  padding:32rpx 0 40rpx;
+  font-size:24rpx;
+}
+
+.img321{
+  width:48rpx;
+  height:48rpx;
+}
+
+.canvas-box{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  width:100%;
+  height:100%;
+}

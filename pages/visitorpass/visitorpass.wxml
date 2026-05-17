@@ -1,0 +1,46 @@
+<view class='container vp-page'>
+  <image class='img_bg' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
+
+  <view class='pass-card' wx:if='{{detail}}'>
+    <view class='pass-card-head'>
+      <view class='pass-title'>访客通行</view>
+      <view class='status-badge {{detail.statusClass}}'>{{detail.statusText || "未到访"}}</view>
+    </view>
+    <view class='pass-subtitle'>{{detail.courtName || "临时访客通行凭证"}}</view>
+
+    <view class='canvas-box'>
+      <view class='qr-frame'>
+        <canvas style='width:200px;height:200px;' bindtap='showQR' canvas-id='mycanvas'/>
+      </view>
+    </view>
+
+    <view class='pwd-section'>
+      <view class='pwd-title'>临时密码</view>
+      <view class='pwd-box'>{{detail.password}}</view>
+    </view>
+
+    <view class='info-list'>
+      <view class='info-row'>
+        <view class='info-label'>截止时间</view>
+        <view class='info-value'>{{detail.expireTime}}</view>
+      </view>
+      <view class='info-row'>
+        <view class='info-label'>有效次数</view>
+        <view class='info-value'>{{detail.useCount}}次</view>
+      </view>
+      <view class='info-row' wx:if='{{detail.deviceSummary}}'>
+        <view class='info-label'>通行设备</view>
+        <view class='info-value device-value'>{{detail.deviceSummary}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class='empty-pass' wx:else>暂无通行信息</view>
+
+  <canvas class='preview-canvas' canvas-id='previewCanvas'></canvas>
+
+  <view class='guide-card'>
+    <view class='guide-title'>使用说明</view>
+    <view class='guide-item' wx:for='{{guideLines}}' wx:key='*this'>{{item}}</view>
+  </view>
+</view>
