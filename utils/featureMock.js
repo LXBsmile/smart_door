@@ -134,7 +134,7 @@ function getDebugQrContent(type) {
 function normalizeFloorLabel(label) {
   const value = String(label || '').trim()
   if (!value) return ''
-  return value.endsWith('层') ? value.slice(0, -1) : value
+  return value
 }
 
 function parseFloorMask(mask, floors) {

@@ -102,7 +102,7 @@
         </view>
         <view class='floor-panel {{item.checked?"":"floor-panel-disabled"}}' wx:if='{{item.floorExpanded&&item.floorItems.length}}'>
           <block wx:for='{{item.floorItems}}' wx:for-item='floor' wx:for-index='floorIndex' wx:key='label'>
-            <view class='floor-cell {{floor.checked?"checked":""}}' catchtap='toggleFloor' data-index='{{index}}' data-floor-index='{{floorIndex}}'>{{floor.label}}层</view>
+            <view class='floor-cell {{floor.checked?"checked":""}}' catchtap='toggleFloor' data-index='{{index}}' data-floor-index='{{floorIndex}}'>{{floor.label}}</view>
           </block>
         </view>
       </block>

@@ -31,7 +31,7 @@
   <view class='selectPanel' wx:else>
     <view class='floorCircleGrid'>
       <block wx:for='{{floors}}' wx:key='item.key'>
-        <view class='floorCircle {{openingDoor?"floorCircleDisabled":""}}' bindtap='executeFloor' bindlongpress='handleFloorLongPress' data-key='{{item.key}}'>{{item.label}}</view>
+        <view class='floorCircle {{openingDoor?"floorCircleDisabled":""}}' bindtap='executeFloor' data-key='{{item.key}}'>{{item.label}}</view>
       </block>
     </view>
     <view class='emptyTip' wx:if='{{!floors.length}}'>暂无可选楼层</view>

@@ -506,7 +506,31 @@ Page({
     return minutes > 0 ? minutes : 1
   },
 
+  confirmVisitorOpen: function (item, selectedFloors) {
+    if (this.openDoorLocked || this.visitorConfirmShowing) return
+    const that = this
+    this.visitorConfirmShowing = true
+    wx.showModal({
+      title: '来访开启',
+      content: '开启时长为' + this.getVisitorOpenMinutes(item) + '分钟！\n确定要开启？',
+      confirmText: '确定',
+      cancelText: '取消',
+      success: function (res) {
+        if (res.confirm) {
+          that.unlockDoor(item, selectedFloors)
+        }
+      },
+      complete: function () {
+        that.visitorConfirmShowing = false
+      }
+    })
+  },
+
   executeVisitorOpen: function (item, selectedFloors) {
+    if (this.data.useOwnerKeyList) {
+      this.confirmVisitorOpen(item, selectedFloors)
+      return
+    }
     this.unlockDoor(item, selectedFloors)
   },
 

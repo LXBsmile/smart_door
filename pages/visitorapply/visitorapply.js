@@ -137,8 +137,7 @@ Page({
       const floors = Array.isArray(floorInfo.floors) ? floorInfo.floors : []
       if (!floors.length) return name
       return name + '（' + floors.map(function (floor) {
-        const value = String(floor || '').replace(/层/g, '')
-        return value + '层'
+        return String(floor || '').trim()
       }).join(TEXT.separator) + '）'
     })
   },

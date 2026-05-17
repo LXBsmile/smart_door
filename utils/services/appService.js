@@ -504,7 +504,7 @@ function getVisitorsKeyListRaw() {
 function normalizeVisitorFloorLabel(label) {
   const value = String(label || '').trim()
   if (!value) return ''
-  return /层$/.test(value) ? value : value + '层'
+  return value
 }
 
 function normalizeVisitorDoorLabel(item) {
@@ -677,11 +677,7 @@ function normalizeSelectedList(selectedFloors) {
   if (!Array.isArray(selectedFloors)) return []
 
   return selectedFloors.map(function (item) {
-    const rawValue = String(item || '')
-    const value = rawValue.trim()
-    if (!value) return ''
-    if (value.endsWith('层')) return value
-    return rawValue.endsWith(' ') ? rawValue + '层' : value + '层'
+    return String(item || '').trim()
   }).filter(Boolean)
 }
 
@@ -716,7 +712,7 @@ function buildSelectedList(source, current, deviceType) {
 function normalizeFloorValue(label) {
   const value = String(label || '').trim()
   if (!value) return ''
-  return value.endsWith('层') ? value.slice(0, -1) : value
+  return value
 }
 
 function normalizeSelectedFloorValues(value) {

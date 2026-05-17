@@ -32,7 +32,7 @@ Page({
       if (!key) return null
       return {
         key: key,
-        label: key.indexOf('层') > -1 ? key : key + '层'
+        label: key
       }
     }).filter(Boolean)
   },
@@ -146,11 +146,6 @@ Page({
       }
     })
   },
-  handleFloorLongPress: function (e) {
-    const floor = e.currentTarget.dataset.key
-    if (!floor) return
-    this.confirmVisitorOpen([floor])
-  },
   toggleAll: function () {
     const checkedMap = {}
     const allChecked = this.data.allChecked
@@ -248,6 +243,7 @@ Page({
     const floor = e.currentTarget.dataset.key
     if (!floor) return
     if (this.isVisitorOpen()) {
+      this.confirmVisitorOpen([floor])
       return
     }
     this.executeOpenDoor([floor])
@@ -266,6 +262,10 @@ Page({
     }
 
     if (this.data.mode === 'select') {
+      if (this.isVisitorOpen()) {
+        this.confirmVisitorOpen(selectedFloors)
+        return
+      }
       this.executeOpenDoor(selectedFloors)
       return
     }

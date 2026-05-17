@@ -541,7 +541,7 @@ Page({
       : (floorInfo.floors && floorInfo.floors.length ? floorInfo.floors : featureMock.getFloorOptions())
     return floors.map(function (floor) {
       return {
-        label: String(floor || '').replace(/层$/, ''),
+        label: String(floor || '').trim(),
         checked: false
       }
     })
