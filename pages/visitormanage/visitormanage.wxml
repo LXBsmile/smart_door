@@ -2,7 +2,7 @@
   <image class='img_bg' src='/images/fxys_bg2.png' mode='scaleToFill'></image>
   <view class='module-card' wx:if='{{pageMode=="menu"}}'>
     <view class='module-grid'>
-      <view class='module-item' wx:if='{{isAdmin}}' data-module='visitor' bindtap='openModule'>
+      <view class='module-item' wx:if='{{canVisitorManage}}' data-module='visitor' bindtap='openModule'>
         <view class='module-icon-wrap'>
           <image class='module-icon module-icon-line' src='/images/fxys_fk.png' mode='aspectFit'></image>
         </view>

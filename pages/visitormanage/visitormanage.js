@@ -31,7 +31,7 @@ Page({
     selectedIds: [],
     selectedFloorSelections: [],
     selectionHydrated: false,
-    isAdmin: false
+    canVisitorManage: false
   },
   ensureFeatureLogin: function () {
     if (this.data.pageMode === 'menu') {
@@ -54,7 +54,7 @@ Page({
       checkedAll: false,
       hasSelected: false,
       selectionHydrated: false,
-      isAdmin: false
+      canVisitorManage: false
     })
     util.scheduleFeatureLoginPrompt(this)
     return false
@@ -77,7 +77,7 @@ Page({
     if (!this.ensureFeatureLogin()) {
       return
     }
-    this.refreshAdminState()
+    this.refreshVisitorManageState()
     if (this.data.pageMode === 'select') {
       this.loadData()
       return
@@ -153,29 +153,29 @@ Page({
     }
   },
 
-  getAdminState: function (courtId) {
+  getVisitorManageState: function (courtId) {
     const backendInfo = appService.getBackEndUserInfo(courtId)
-    return appService.isBackendEnabled(backendInfo?.f_IsAdmin)
+    return appService.isBackendEnabled(backendInfo?.f_VisitorManagement)
   },
 
-  refreshAdminState: function () {
+  refreshVisitorManageState: function () {
     if (!app.globalData.isRegisted || !util.isRegisteredUser(app.globalData.userInfo)) {
       this.setData({
-        isAdmin: false
+        canVisitorManage: false
       })
       return
     }
     const stored = util.getStoredCourtState()
     const courtId = String(stored.currentCourt?.f_id || this.data.thisCourtID || '').trim()
     this.setData({
-      isAdmin: this.getAdminState(courtId)
+      canVisitorManage: this.getVisitorManageState(courtId)
     })
     if (!courtId) return
     util.refreshBackEndUserInfo((res) => {
       if (String(stored.currentCourt?.f_id || this.data.thisCourtID || '') !== courtId) return
       if (!res || res.Status !== 'success') return
       this.setData({
-        isAdmin: this.getAdminState(courtId)
+        canVisitorManage: this.getVisitorManageState(courtId)
       })
     }, {
       courtId: courtId,
@@ -201,7 +201,7 @@ Page({
   openModule: function (e) {
     const module = e.currentTarget.dataset.module
     if (module === 'visitor') {
-      if (!this.data.isAdmin) return
+      if (!this.data.canVisitorManage) return
       wx.navigateTo({
         url: '/pages/visitorme/visitorme?mode=visitor',
       })
