@@ -31,14 +31,38 @@ Page({
   },
 
   buildQrContent: function (detail) {
+    const time = this.getQrTime(detail)
+    return 'Time:' + time + ',Type:' + (detail.qrType || 'A8') + ',Value:' + this.formatQrPassword(detail.password)
+  },
+
+  getQrTime: function (detail) {
+    const source = detail || {}
+    const candidates = [
+      source.validity,
+      source.raw && source.raw.f_validity,
+      source.expireTime
+    ]
+    for (let index = 0; index < candidates.length; index++) {
+      const digits = String(candidates[index] || '').replace(/\D/g, '')
+      if (digits.length >= 12) {
+        return digits.slice(2, 12)
+      }
+      if (digits.length === 10) {
+        if (/^(19|20)/.test(digits)) {
+          return digits.slice(2) + '00'
+        }
+        return digits
+      }
+    }
+
     const date = new Date()
-    const time =
+    return (
       ('00' + date.getFullYear()).substr(-2) +
       ('00' + (date.getMonth() + 1)).substr(-2) +
       ('00' + date.getDate()).substr(-2) +
       ('00' + date.getHours()).substr(-2) +
       ('00' + date.getMinutes()).substr(-2)
-    return 'Time:' + time + ',Type:' + (detail.qrType || 'A8') + ',Value:' + this.formatQrPassword(detail.password)
+    )
   },
 
   formatQrPassword: function (password) {

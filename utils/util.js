@@ -1418,6 +1418,10 @@ function getQRCodeContentForDoor(phone, func, timeObj) {
   return ('' + func + tempStr + vali).toUpperCase();
 }
 
+function getCustomQRCodeContentForDoor(phone, timeObj) {
+  return getQRCodeContentForDoor(phone, config.APP_CONFIG.FUNC_P_C, timeObj)
+}
+
 function base64_encode(str) {
   return ("" + CryptoJS.enc.Base64.stringify(str))
 }
@@ -1452,6 +1456,7 @@ module.exports = {
   formatNumber: formatNumber,
   getQRCodeContent,
   getQRCodeContentForDoor,
+  getCustomQRCodeContentForDoor,
   encodeForDoorQR,
   getCardByPhone,
   encode: encode,

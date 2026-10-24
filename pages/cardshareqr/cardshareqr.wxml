@@ -1,0 +1,29 @@
+<view class='container'>
+  <view class='canvas-box' catch:tap='showQR'>
+    <canvas
+      bindtouchstart='showQR'
+      class='canvas'
+      id='canvas'
+      style='width:100%;height:{{previewImage?qr_height:max_height}}px;'
+      canvas-id='mycanvas1'
+    />
+  </view>
+  <view class='settings-panel'>
+    <label class='create-header-title'>设置访客二维码有效时长</label>
+    <view class='create-time-options'>
+      <label class='options-title'>小时</label>
+      <view class='slider-box'>
+        <slider bindchange="changeHour" min="0" max="23" value='{{hour}}' show-value />
+      </view>
+    </view>
+    <view class='create-time-options'>
+      <label class='options-title'>分钟</label>
+      <view class='slider-box'>
+        <slider bindchange="changeMin" min="0" max="59" value='{{min}}' show-value />
+      </view>
+    </view>
+    <view class='valid-date' wx:if='{{vdate!=""}}'>有效时间至: {{vdate}}</view>
+    <button class='btn-save' bindtap="createCustomQR">确认设置</button>
+  </view>
+</view>
+

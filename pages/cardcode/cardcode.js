@@ -246,20 +246,8 @@ Page({
     return featureMock.DEBUG_OPEN_PERMISSION && !app.globalData.openId
   },
   gotoVisitorManage: function () {
-    const backendInfo = this.data.backend || {}
-    if (!backendInfo.f_validity || !backendInfo.f_cardMsg) {
-      util.notice('获取权限码失败', '访客二维码参数无效')
-      return
-    }
-    if (new Date() > new Date((backendInfo.f_validity || '').replace(/-/g, '/') + ':00:00')) {
-      wx.showModal({
-        content: '您的权限已过期',
-        showCancel: false
-      })
-      return
-    }
     wx.navigateTo({
-      url: '/pages/shareqr/shareqr?val=' + backendInfo.f_validity + '&msg=' + backendInfo.f_cardMsg,
+      url: '/pages/cardshareqr/cardshareqr'
     })
   },
   showQR: function () {

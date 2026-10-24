@@ -18,7 +18,8 @@
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false,
-    "useIsolateContext": true
+    "useIsolateContext": true,
+    "useGlassEaselForWxml": false
   },
   "libVersion": "3.9.3",
   "condition": {}
