@@ -10,6 +10,7 @@ const TEXT = {
   inputCounts: '请输入正确的使用次数',
   inputValidity: '请选择正确的有效期',
   expiredValidity: '有效期必须晚于当前时间',
+  maxValidity: '有效期最晚为明天 23:59',
   noDeviceAvailable: '暂无可授权设备',
   courtLoadFailed: '获取小区信息失败',
   submitFailed: '提交失败',
@@ -142,12 +143,22 @@ Page({
     })
   },
 
+  getTomorrowEnd: function () {
+    const end = new Date()
+    end.setDate(end.getDate() + 1)
+    end.setHours(23, 59, 59, 0)
+    return end
+  },
+
   getMaxDate: function (courtid = '') {
+    const tomorrow = this.getTomorrowEnd()
+    const tomorrowStr = tomorrow.getFullYear() + '-' + this.pad(tomorrow.getMonth() + 1) + '-' + this.pad(tomorrow.getDate())
     const backendInfo = appService.getBackEndUserInfo(courtid) || {}
     const validity = String(backendInfo.f_validity || '').trim()
-    if (!validity) return ''
+    if (!validity) return tomorrowStr
     const dateStr = validity.split(' ')[0]
-    return /^\d{4}-\d{2}-\d{2}$/.test(dateStr) ? dateStr : ''
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return tomorrowStr
+    return dateStr < tomorrowStr ? dateStr : tomorrowStr
   },
 
   pad: function (n) {
@@ -403,6 +414,10 @@ Page({
     }
     if (selectedValidity <= new Date()) {
       util.notice(TEXT.tip, TEXT.expiredValidity)
+      return
+    }
+    if (selectedValidity > this.getTomorrowEnd()) {
+      util.notice(TEXT.tip, TEXT.maxValidity)
       return
     }
 

@@ -21,7 +21,7 @@ Page({
     dayArray: [''],
     dayIndex: 0,
     timeArray: [''],
-    timeIndex: 0,
+    timeIndex: 23,
     fullTimeArray: ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'],
     validity: null,
     fullArray: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32'],
@@ -169,11 +169,13 @@ Page({
       this.resetValidity()
       return
     }
+    const tomorrowEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 23, 59, 59)
+    const capDate = validityDate < tomorrowEnd ? validityDate : tomorrowEnd
     this.setData({
-      validity: validityDate,
+      validity: capDate,
       dateDis: false,
       startYear: String(now.getFullYear()),
-      endYear: String(validityDate.getFullYear()),
+      endYear: String(capDate.getFullYear()),
       inputYear: String(now.getFullYear())
     })
     this.judgeMonth()
@@ -272,6 +274,16 @@ Page({
     }
     if (this.data.dateDis || !this.data.inputYear || !this.data.monthArray.length || !this.data.dayArray.length || !this.data.timeArray.length) {
       util.notice('提示', '当前权限有效期不可用于分享')
+      return
+    }
+    const selected = new Date(
+      Number(this.data.inputYear),
+      Number(this.data.monthArray[this.data.monthIndex]) - 1,
+      Number(this.data.dayArray[this.data.dayIndex]),
+      Number(this.data.timeArray[this.data.timeIndex]), 0, 0, 0
+    )
+    if (this.data.validity && selected > this.data.validity) {
+      util.notice('提示', '所选时间超出可选范围')
       return
     }
     var date = new Date()
